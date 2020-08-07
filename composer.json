@@ -17,7 +17,7 @@
         "hyperf/cache": "~2.0.0",
         "hyperf/command": "~2.0.0",
         "hyperf/config": "~2.0.0",
-        "hyperf/db-connection": "~2.0.0",
+        "hyperf/db-connection": "^2.0",
         "hyperf/framework": "~2.0.0",
         "hyperf/guzzle": "~2.0.0",
         "hyperf/http-server": "~2.0.0",

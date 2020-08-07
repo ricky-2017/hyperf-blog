@@ -23,4 +23,9 @@ class IndexController extends AbstractController
             'message' => "Hello {$user}.",
         ];
     }
+
+    public function test()
+    {
+        return 111;
+    }
 }
