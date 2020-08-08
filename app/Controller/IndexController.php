@@ -20,7 +20,7 @@ class IndexController extends AbstractController
 
         return [
             'method' => $method,
-            'message' => "Hello {$user}.",
+            'message' => "Hello Hyperf {$user}.",
         ];
     }
 
