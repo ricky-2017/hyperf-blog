@@ -18,6 +18,7 @@ class BizException extends ServerException
      * @var array ReturnCode
      */
     protected $returnCode;
+    protected $data;
 
     public function __construct(array $returnCode = ReturnCode::UNDEFINED,
                                 $message, $data=[],
@@ -35,5 +36,10 @@ class BizException extends ServerException
      */
     public function getReturnCode() {
         return $this->returnCode;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 }

@@ -11,7 +11,9 @@ declare(strict_types=1);
  */
 namespace App\Exception\Handler;
 
+use App\Exception\BizException;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\DbConnection\Db;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
@@ -33,6 +35,19 @@ class AppExceptionHandler extends ExceptionHandler
     {
         $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
         $this->logger->error($throwable->getTraceAsString());
+
+        if($throwable instanceof BizException)
+        {
+            Db::rollBack();
+            $body = [
+                'code'        => $throwable->getCode(),
+                'data'        => $throwable->getData(),
+                'message'     => $throwable->getMessage()
+            ];
+
+            return $response->withHeader('Server', 'Hyperf')->withStatus(200)->withBody(new SwooleStream(json_encode($body)));
+        }
+
         return $response->withHeader('Server', 'Hyperf')->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
     }
 

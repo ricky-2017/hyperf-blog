@@ -6,11 +6,11 @@
  * Time: 0:52
  */
 
-namespace app\Constants;
+namespace App\Constants;
 
 class ReturnCode
 {
-    const SUCCESS = [10000, 200, 'SUCCESS'];
+    const SUCCESS = [10000,  'SUCCESS'];
 
     const INVALID_PARAM = [40000, '请求参数错误'];
     const UNSUPPORTED_HTTP_METHOD = [40001, 'HTTP请求方法错误'];
