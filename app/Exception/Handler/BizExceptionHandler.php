@@ -10,11 +10,11 @@ namespace App\Exception\Handler;
 
 
 use App\Exception\BizException;
+
 use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\DbConnection\Db;
 use Hyperf\ExceptionHandler\ExceptionHandler;
+use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
 use Hyperf\HttpMessage\Stream\SwooleStream;
-use Monolog\Formatter\FormatterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -40,7 +40,7 @@ class BizExceptionHandler extends ExceptionHandler
     {
         $this->logger->debug($this->formatter->format($throwable));
 
-        $this->isPropagationStopped();
+        $this->stopPropagation();
 //        Db::rollBack();
         $body = [
             'code'        => $throwable->getCode(),
