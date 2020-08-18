@@ -12,11 +12,11 @@ declare(strict_types=1);
 return [
     'default' => [
         'driver' => env('DB_DRIVER', 'mysql'),
-        'host' => env('DB_HOST', 'localhost'),
+        'host' => env('DB_HOST', '172.17.0.1'),
         'database' => env('DB_DATABASE', 'hyperf'),
         'port' => env('DB_PORT', 3306),
-        'username' => env('DB_USERNAME', 'root'),
-        'password' => env('DB_PASSWORD', 'root123456'),
+        'username' => env('DB_USERNAME', 'wp_blog'),
+        'password' => env('DB_PASSWORD', 'jie8991042'),
         'charset' => env('DB_CHARSET', 'utf8'),
         'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
         'prefix' => env('DB_PREFIX', ''),

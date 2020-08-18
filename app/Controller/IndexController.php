@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Constants\ReturnCode;
+use Hyperf\DbConnection\Db;
 
 class IndexController extends AbstractController
 {
@@ -19,18 +20,19 @@ class IndexController extends AbstractController
     {
         $user = $this->request->input('user', 'Hyperf');
         $method = $this->request->getMethod();
-        $array = ['list'=>['s','s','数据库的建立'],'jkjj'=>2];
+
+        $a = Db::table('test')->where('id',1)->get();
+//        $a->toArray();
+
+        return $a->toArray();
+
+
+        $array = ['list'=>['s','s','数据库的建立   你好哈'],'jkjj'=>2];
 
         bizException(ReturnCode::INVALID_PARAM,'错误参数测试',$array);
 
         return jsonSuccess($array);
 
-
-
-//        return [
-//            'method' => $method,
-//            'message' => "Hello Hyperf {$user}.",
-//        ];
     }
 
     public function test()
