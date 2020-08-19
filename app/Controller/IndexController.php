@@ -12,12 +12,15 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Constants\ReturnCode;
+use App\Service\UserService;
 use Hyperf\DbConnection\Db;
 
 class IndexController extends AbstractController
 {
-    public function index()
+    public function index(UserService $userService)
     {
+        return $userService->test();
+
         $user = $this->request->input('user', 'Hyperf');
         $method = $this->request->getMethod();
 
