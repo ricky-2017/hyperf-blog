@@ -12,7 +12,7 @@ declare(strict_types=1);
 return [
     'default' => [
         'driver' => env('DB_DRIVER', 'mysql'),
-        'host' => env('DB_HOST', '172.17.0.1'),
+        'host' => env('DB_HOST', '132.232.105.96'),
         'database' => env('DB_DATABASE', 'hyperf'),
         'port' => env('DB_PORT', 3306),
         'username' => env('DB_USERNAME', 'wp_blog'),
