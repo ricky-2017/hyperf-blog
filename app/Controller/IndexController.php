@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Constants\ReturnCode;
+use App\Model\Article;
 use App\Service\UserService;
 use Hyperf\DbConnection\Db;
 
@@ -19,16 +20,18 @@ class IndexController extends AbstractController
 {
     public function index(UserService $userService)
     {
-        return $userService->test();
+//        return $userService->test();
 
         $user = $this->request->input('user', 'Hyperf');
         $method = $this->request->getMethod();
-
-        $a = Db::table('test')->where('id',1)->get();
+//        return 111;
+//        $a = Db::table('test')->where('id',1)->get();
 //        $a->toArray();
-
-        return $a->toArray();
-
+//
+//        return $a->toArray();
+        return Db::table('article')->get()->toArray();
+//        $data = make(Article::Class)->getArticles(1,10);
+        return $data;
 
         $array = ['list'=>['s','s','数据库的建立   你好哈'],'jkjj'=>2];
 
