@@ -19,7 +19,7 @@ class IndexController extends AbstractController
 {
     public function index(Request $request,ArticleService $articleService)
     {
-        $result = $articleService->list($request->query(''),$request->query('page'),$request->query('pageSize'));
+        $result = $articleService->list($request->query(),$request->query('page'),$request->query('pageSize'));
 
         return jsonSuccess('',$result);
     }
@@ -27,7 +27,7 @@ class IndexController extends AbstractController
     public function getArticleArchives(Request $request,ArticleService $articleService)
     {
 
-        $result = $articleService->archivesList($request->query(''),$request->query('page'),$request->query('pageSize'));
+        $result = $articleService->archivesList($request->query(),$request->query('page'),$request->query('pageSize'));
 
         return jsonSuccess('success',$result);
     }

@@ -27,13 +27,20 @@ class ArticleServiceImpl implements ArticleService
 
     public function list($search = [], $page, $pageSize)
     {
+        $where = [];
 
+        $where[] = ['id', '<>', -1];
+        $where[] = ['status', '=' , 0];
+        if(isset($search['searchValue']))
+        {
+            $where[] = ['title','like','%'.$search['searchValue'].'%'];
+        }
 
         $articles = Article::with(['tags','category'])
-            ->where('id','!=',-1)
-            ->where('status',0)
+            ->where($where)
             ->orderBy('publish_time', 'desc')
             ->paginate($pageSize);
+
 
         $list = $articles->items();
 
