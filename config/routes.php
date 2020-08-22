@@ -19,12 +19,12 @@ Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@i
 //
 Router::addGroup('/w/',function() {
     Router::get('article/list', 'App\Controller\IndexController@index');// 获取文章列表 yes
-    Router::get('article/archives', 'App\Controller\ArticleController@getArticleArchives');// 获取文章归档列表 yes
-    Router::get('article', 'App\Controller\ArticleController@getArticle');// 获取文章信息 yes
-    Router::get('article/search', 'App\Controller\ArticleController@search');// 按文章标题和简介搜索 yes
+    Router::get('article/archives', 'App\Controller\IndexController@getArticleArchives');// 获取文章归档列表 yes
+    Router::get('article', 'App\Controller\IndexController@getArticle');// 获取文章信息 yes
+    Router::get('article/search', 'App\Controller\IndexController@search');// 按文章标题和简介搜索 yes
 
-    Router::get('category/list','App\Controller\ArticleController@categoryList');//获取分类列表 yes
-    Router::get('tag/list','App\Controller\ArticleController@tagList');//获取标签列表 yes
+    Router::get('category/list','App\Controller\IndexController@categoryList');//获取分类列表 yes
+    Router::get('tag/list','App\Controller\IndexController@tagList');//获取标签列表 yes
 
     // 网站配置信息
     Router::get('getAbout','App\Controller\WebConfig@getAboutMe');  //yes

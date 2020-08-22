@@ -12,19 +12,35 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\ArticleService;
+use Hyperf\HttpServer\Request;
 
 
 class IndexController extends AbstractController
 {
-    public function index(ArticleService $articleService)
+    public function index(Request $request,ArticleService $articleService)
     {
-        $result = $articleService->list($this->request->input('get.'),$this->request->input('get.page'),$this->request->input('get.pageSize'));
+        $result = $articleService->list($request->query(''),$request->query('page'),$request->query('pageSize'));
 
         return jsonSuccess('',$result);
     }
 
-    public function test()
+    public function getArticleArchives(Request $request,ArticleService $articleService)
     {
-        return 111;
+
+        $result = $articleService->archivesList($request->query(''),$request->query('page'),$request->query('pageSize'));
+
+        return jsonSuccess('success',$result);
+    }
+
+    // tags
+    public function tagList(ArticleService $articleService)
+    {
+        return jsonSuccess('success',$articleService->tags());
+    }
+
+    // category
+    public function categoryList(ArticleService $articleService)
+    {
+        return jsonSuccess('success',$articleService->categories());
     }
 }

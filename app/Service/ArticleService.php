@@ -12,4 +12,10 @@ namespace App\Service;
 interface ArticleService
 {
     function list($search = [], $page, $pageSize);
+
+    function archivesList($search = [], $page, $pageSize);
+
+    function tags();
+
+    function categories();
 }
