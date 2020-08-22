@@ -22,13 +22,29 @@ class Article extends Model
 
     public function category()
     {
-        $this->hasOne(Category::Class,'aid','category_id');
+        return $this->hasOne(Category::Class,'id','category_id');
     }
 
-    public function tag()
+    public function tags()
     {
-//        $this->hasMany(Tag::Class,'aid');
+        return $this->belongsToMany(Tag::class,'article_tag_mapper','article_id','tag_id','id','id');
+//      return $this->hasMany(ArticleTagMapper::Class,'article_id','aid');
     }
+
+//    public function
+
+    // 远程一对多
+//    public function tags()
+//    {
+//        return $this->hasManyThrough(
+//            Tag::class,
+//            ArticleTagMapper::class,
+//            'article_id', //
+//            'id', //
+//            'id', //
+//            'tag_id'  //
+//        );
+//    }
 
     /**
      * 获取文章的分类、标签信息
@@ -421,7 +437,26 @@ class Article extends Model
             {
                 foreach ($data['tags'] as $vo)
                 {
-                    $mapper[] = ['article_id' => $article_id, 'tag_id' => $vo['id'],'create_time' => time()];
+                    if(isset($vo['id']))
+                    {
+                        $mapper[] = ['article_id' => $article_id, 'tag_id' => $vo['id'],'create_time' => time()];
+                    }else{
+                        // 新插入的标签
+                        if(isset($vo['name']))
+                        {
+                            // 文章标签
+                            $id = create_id();
+
+                            $tag = new Tag();
+                            $tag->id = $id;
+                            $tag->article_id = $article_id;
+                            $tag->save();
+
+                            $mapper[] = ['article_id' => $article_id, 'tag_id' =>$id,'create_time' => time()];
+                        }
+                    }
+
+
                 }
                 DB::table('article_tag_mapper')->insert($mapper);
             }

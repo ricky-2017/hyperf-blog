@@ -11,34 +11,17 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
-use App\Constants\ReturnCode;
-use App\Model\Article;
-use App\Service\UserService;
-use Hyperf\DbConnection\Db;
+use App\Service\ArticleService;
+
 
 class IndexController extends AbstractController
 {
-    public function index(UserService $userService)
+
+    public function index(ArticleService $articleService)
     {
-//        return $userService->test();
+        $result = $articleService->list($this->request->input('get.'),$this->request->input('get.page'),$this->request->input('get.pageSize'));
 
-        $user = $this->request->input('user', 'Hyperf');
-        $method = $this->request->getMethod();
-//        return 111;
-//        $a = Db::table('test')->where('id',1)->get();
-//        $a->toArray();
-//
-//        return $a->toArray();
-        return Db::table('article')->get()->toArray();
-//        $data = make(Article::Class)->getArticles(1,10);
-        return $data;
-
-        $array = ['list'=>['s','s','数据库的建立   你好哈'],'jkjj'=>2];
-
-        bizException(ReturnCode::INVALID_PARAM,'错误参数测试',$array);
-
-        return jsonSuccess($array);
-
+        return jsonSuccess('',$result);
     }
 
     public function test()
