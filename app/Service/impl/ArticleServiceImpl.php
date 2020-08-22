@@ -11,9 +11,18 @@ namespace App\Service\impl;
 
 use App\Model\Article;
 use App\Service\ArticleService;
+use Hyperf\Logger\LoggerFactory;
+use Hyperf\Utils\Collection;
 
 class ArticleServiceImpl implements ArticleService
 {
+    private $logger;
+
+    public function __construct(LoggerFactory $loggerFactory)
+    {
+        $this->logger = $loggerFactory->get('log', 'default');
+    }
+
     public function list($search = [], $page, $pageSize)
     {
         $articles = Article::with(['tags','category'])
@@ -28,7 +37,7 @@ class ArticleServiceImpl implements ArticleService
             'page'    => $articles->currentPage(),
             'pageSize'=> $articles->perPage(),
             'count'   => $articles->total(),
-            'list'    => arrayKeyTrans($list,'hump')
+            'list'    => arrayKeyTrans(Collection::make($list)->toArray(),'hump')
         ];
 
         return $result;
