@@ -16,7 +16,6 @@ use App\Service\ArticleService;
 
 class IndexController extends AbstractController
 {
-
     public function index(ArticleService $articleService)
     {
         $result = $articleService->list($this->request->input('get.'),$this->request->input('get.page'),$this->request->input('get.pageSize'));

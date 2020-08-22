@@ -20,15 +20,16 @@ class Article extends Model
         parent::__construct($attributes);
     }
 
+    // 一对一分类
     public function category()
     {
         return $this->hasOne(Category::Class,'id','category_id');
     }
 
+    // 多对多标签
     public function tags()
     {
         return $this->belongsToMany(Tag::class,'article_tag_mapper','article_id','tag_id','id','id');
-//      return $this->hasMany(ArticleTagMapper::Class,'article_id','aid');
     }
 
 //    public function
