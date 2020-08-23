@@ -86,7 +86,7 @@ class ArticleServiceImpl implements ArticleService
             'status',
             'article_count as articleCount'
         ];
-        $tagList = Tag::query()->where('article_count', '>', 0)
+        $tagList = Tag::query()->where('status', 0)
                                ->orderByDesc('aid')
                                ->get($field);
         $tagList = Collection::make($tagList)->toArray();

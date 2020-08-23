@@ -27,10 +27,10 @@ Router::addGroup('/w/',function() {
     Router::get('tag/list','App\Controller\IndexController@tagList');//获取标签列表 yes
 
     // 网站配置信息
-    Router::get('getAbout','App\Controller\WebConfig@getAboutMe');  //yes
-    Router::get('getResume','App\Controller\WebConfig@getResume');  //yes
-    Router::get('blogInfo','App\Controller\WebConfig@blogInfo');    //yse
-    Router::get('friends/list','App\Controller\WebConfig@getFriends');// 获取友链列表
+    Router::get('getAbout','App\Controller\WebConfigController@getAboutMe');  //yes
+    Router::get('getResume','App\Controller\WebConfigController@getResume');  //yes
+    Router::get('blogInfo','App\Controller\WebConfigController@blogInfo');    //yse
+    Router::get('friends/list','App\Controller\WebConfigController@getFriends');// 获取友链列表
 
     // 获取文章评论列表
     Router::get('comments/list','App\Controller\ArticleController@getComments'); // 评论列表 yse

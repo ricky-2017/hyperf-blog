@@ -7,6 +7,9 @@ use Hyperf\DbConnection\Db;
 
 class BlogConfig extends Model
 {
+    protected $table = 'blog_config';
+    protected $primaryKey = 'id';
+
     public function getWebConfig()
     {
         $config = Db::table('blog_config')->select('blog_name as blogName','avatar','sign','github')->first();
