@@ -32,6 +32,7 @@ class Article extends Model
         return $this->belongsToMany(Tag::class,'article_tag_mapper','article_id','tag_id','id','id');
     }
 
+
 //    public function
 
     // 远程一对多

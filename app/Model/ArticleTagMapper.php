@@ -22,4 +22,5 @@ class ArticleTagMapper extends Model
         parent::__construct($attributes);
     }
 
+
 }

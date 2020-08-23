@@ -10,6 +10,7 @@ namespace App\Service\impl;
 
 
 use App\Model\Article;
+use App\Model\ArticleTagMapper;
 use App\Model\Category;
 use App\Model\Tag;
 use App\Service\ArticleService;
@@ -35,12 +36,26 @@ class ArticleServiceImpl implements ArticleService
         {
             $where[] = ['title','like','%'.$search['searchValue'].'%'];
         }
+        if(isset($search['by']) && $search['by'] == 'category' && isset($search['categoryId']))
+        {
+            $where[] = ['category_id','eq',$search['categoryId']];
+        }
+
+        if(isset($search['by']) && $search['by'] == 'tag' && isset($search['tagId']))
+        {
+            $articles = ArticleTagMapper::query()->where('tag_id',$search['tagId'])->get('article_id');
+            if($articles->isNotEmpty())
+            {
+                $articles_ids = array_column($articles->toArray(),'article_id');
+                // TODO 查看查询出错原因
+                $where[] = ['id','in',$articles_ids];
+            }
+        }
 
         $articles = Article::with(['tags','category'])
             ->where($where)
             ->orderBy('publish_time', 'desc')
             ->paginate($pageSize);
-
 
         $list = $articles->items();
 
@@ -86,11 +101,21 @@ class ArticleServiceImpl implements ArticleService
             'status',
             'article_count as articleCount'
         ];
-        $tagList = Tag::query()->where('status', 0)
-                               ->orderByDesc('aid')
-                               ->get($field);
-        $tagList = Collection::make($tagList)->toArray();
-        return ['count' => count($tagList),'list' => arrayKeyTrans($tagList,'hump')];
+        $tags = ArticleTagMapper::query()->groupBy('tag_id')->get('tag_id');
+        if($tags->isNotEmpty())
+        {
+            $tags = array_column($tags->toArray(),'tag_id');
+
+            $tagList = Tag::query()->where('status', 0)
+                ->whereIn('id', $tags)
+                ->orderByDesc('aid')
+                ->get($field);
+            $tagList = Collection::make($tagList)->toArray();
+            return ['count' => count($tagList),'list' => arrayKeyTrans($tagList,'hump')];
+        }else{
+            return ['count'=>0,'list'=>[]];
+        }
+
     }
 
     public function categories()
