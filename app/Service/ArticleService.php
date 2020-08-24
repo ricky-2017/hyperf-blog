@@ -18,4 +18,6 @@ interface ArticleService
     function tags();
 
     function categories();
+
+    function getArticle($id);
 }

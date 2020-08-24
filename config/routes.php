@@ -36,3 +36,61 @@ Router::addGroup('/w/',function() {
     Router::get('comments/list','App\Controller\ArticleController@getComments'); // 评论列表 yse
     Router::post('comments/add','App\Controller\ArticleController@addComments'); // 添加评论 yse
 });
+
+
+Router::addGroup('/a/',function (){
+    Router::post('login', 'App\Controller\AdminController@login');// 登录
+    Router::get('qiniu/token', 'App\Controller\UploadController@getToken');//
+    Router::post('qiniu/uploads', 'App\Controller\UploadController@uploads');//
+});
+
+
+Router::addGroup('/a/',function() {
+    Router::get('webConfig','App\Controller\WebConfigController@getWebConfig');
+    Router::post('webConfig/modify','App\Controller\WebConfigController@modify');// 修改博客配置
+    Router::get('webConfig/getAbout','App\Controller\WebConfigController@getAboutMe');// 获取 关于我
+    Router::post('webConfig/modifyAbout','App\Controller\WebConfigController@modifyAbout');// 修改 关于我
+    Router::get('webConfig/getResume','App\Controller\WebConfigController@getResume');// 获取 我的简历
+    Router::post('webConfig/modifyResume','App\Controller\WebConfigController@modifyResume');// 修改 我的简历
+
+    // 友链
+    Router::get('friends/typeList','App\Controller\FriendsController@getFriendsType');
+    Router::get('friends/list','App\Controller\FriendsController@getFriendsList');
+    Router::post('friends/add','App\Controller\FriendsController@addFriend');
+    Router::post('friends/modify','App\Controller\FriendsController@modifyFriend');
+    Router::post('friends/delete','App\Controller\FriendsController@delFriend');
+
+    // 分类管理
+    Router::get('category/get','App\Controller\CategoryController@getCategory');
+    Router::get('category/list','App\Controller\CategoryController@list');
+    Router::post('category/add','App\Controller\CategoryController@add');
+    Router::post('category/modify','App\Controller\CategoryController@modify');
+    Router::post('category/delete','App\Controller\CategoryController@delCategory');
+
+    // 标签管理
+    Router::get('tag/get','App\Controller\TagController@getTag');
+    Router::get('tag/list','App\Controller\TagController@tagList');
+    Router::post('tag/add','App\Controller\TagController@addTag');
+    Router::post('tag/modify','App\Controller\TagController@modifyTag');
+    Router::post('tag/delete','App\Controller\TagController@delTag');
+
+    // 文章管理
+    Router::get('article/info','App\Controller\ArticleController@getArticle');
+    Router::get('article/list','App\Controller\ArticleController@getArticleList');
+    Router::post('article/delete','App\Controller\ArticleController@delete');
+    Router::post('article/save','App\Controller\ArticleController@save');
+    Router::post('article/publish','App\Controller\ArticleController@publish');
+    Router::post('article/modify','App\Controller\ArticleController@modify');
+
+    // 评论管理
+    Router::get('comments/list','App\Controller\CommentsController@getComments');
+    Router::get('comments/alllist','App\Controller\CommentsController@getAllComments');
+    Router::post('comments/add','App\Controller\CommentsController@add');
+    Router::post('comments/delete','App\Controller\CommentsController@delete');
+
+    // 系统信息
+    Router::get('sys/log','App\Controller\SystemController@getSysLog');
+    Router::get('statistics/home','App\Controller\SystemController@getHomeStatistics');
+
+}, ['middleware' => [App\Middleware\JwtAuthMiddleware::class]]);
+

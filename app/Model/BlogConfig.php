@@ -12,13 +12,13 @@ class BlogConfig extends Model
 
     public function getWebConfig()
     {
-        $config = Db::table('blog_config')->select('blog_name as blogName','avatar','sign','github')->first();
-        return (array)$config;
+        $config = self::query()->select('blog_name as blogName','avatar','sign','github')->first();
+        return $config->toArray();
     }
 
     public function getQrCode(){
-        $config = DB::table('blog_config')->select('wxpay_qrcode as wxpayQrcode','alipay_qrcode as alipayQrcode')->first();
-        return (array)$config;
+        $config = self::query()->select('wxpay_qrcode as wxpayQrcode','alipay_qrcode as alipayQrcode')->first();
+        return $config->toArray();
     }
 
 //

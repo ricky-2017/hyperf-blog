@@ -3,8 +3,8 @@
 namespace App\Model;
 
 use App\Constants\ReturnCode;
-use Hyperf\Utils\Collection;
 use Hyperf\DbConnection\Db;
+use Hyperf\Utils\Collection;
 
 class Article extends Model
 {
@@ -230,7 +230,7 @@ class Article extends Model
         $field = 'article.id as id, title, cover, sub_message as subMessage, pageview, article.status as status, category_id as categoryId, is_encrypt as isEncrypt, article.publish_time as publishTime, article.create_time as createTime, article.update_time as updateTime, article.delete_time as deleteTime';
         $field = explode(', ',$field);
 
-        $articles = DB::table('article')->select($field)
+        $articles = Db::table('article')->select($field)
             ->orderByDesc('article.publish_time')
             ->leftJoin('article_tag_mapper', 'article_tag_mapper.article_id', '=' ,'article.id')
             ->where('article_tag_mapper.tag_id', '=',$tagId)
@@ -260,19 +260,19 @@ class Article extends Model
         return $data;
     }
 
-    public function getPreNextArticle($article)
+    public function getPreNextArticle($publishTime)
     {
-        $pre = DB::table('article')
+        $pre = Db::table('article')
             ->select('id', 'title')
             ->where('status', '0')
-            ->where('publish_time', '>', $article['publishTime'])
+            ->where('publish_time', '>', $publishTime)
             ->orderBy('publish_time', 'asc')
             ->first();
 
-        $next = DB::table('article')
+        $next = Db::table('article')
             ->select('id', 'title')
             ->where('status', '0')
-            ->where('publish_time', '<', $article['publishTime'])
+            ->where('publish_time', '<', $publishTime)
             ->orderBy('publish_time', 'desc')
             ->first();
 
@@ -389,7 +389,7 @@ class Article extends Model
     public function saveArticle($data)
     {
         try{
-            DB::beginTransaction();
+            Db::beginTransaction();
             $article_id = isset($data['id']) ? $data['id'] : create_id();
             $common_part = [
                 'title'          => $data['title'],
@@ -420,7 +420,7 @@ class Article extends Model
                     'create_time'    => time(),
                 ];
 
-                DB::table('article')->insert(array_merge($insert,$common_part));
+                Db::table('article')->insert(array_merge($insert,$common_part));
 
             }else{
 
@@ -428,9 +428,9 @@ class Article extends Model
                     'update_time'    => time(),
                 ];
 
-                DB::table('article')->where('id',$article_id)->update(array_merge($update,$common_part));
+                Db::table('article')->where('id',$article_id)->update(array_merge($update,$common_part));
                 // 标签处理
-                DB::table('article_tag_mapper')->where('article_id','=',$article_id)->delete();
+                Db::table('article_tag_mapper')->where('article_id','=',$article_id)->delete();
             }
 
             // 标签处理
@@ -460,14 +460,14 @@ class Article extends Model
 
 
                 }
-                DB::table('article_tag_mapper')->insert($mapper);
+                Db::table('article_tag_mapper')->insert($mapper);
             }
 
 
-            DB::commit();
+            Db::commit();
         }catch (\Exception $e)
         {
-            DB::rollBack();
+            Db::rollBack();
             bizException(ReturnCode::DATA_CONSTRAINT_ERROR,'保存失败'.$e->getMessage());
         }
 //        save_system_log('更新了文章'.$article_id,$_SERVER['REMOTE_ADDR']);

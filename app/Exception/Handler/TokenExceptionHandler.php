@@ -14,10 +14,11 @@ namespace App\Exception\Handler;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Phper666\JwtAuth\Exception\TokenValidException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-class AppExceptionHandler extends ExceptionHandler
+class TokenExceptionHandler extends ExceptionHandler
 {
     /**
      * @var StdoutLoggerInterface
@@ -31,11 +32,19 @@ class AppExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
+        if($throwable instanceof TokenValidException)
+        {
+            $this->stopPropagation();
 
-        $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
-        $this->logger->error($throwable->getTraceAsString());
+            $body = [
+                'code'        => $throwable->getCode(),
+                'data'        => [],
+                'message'     => $throwable->getMessage()
+            ];
 
-        return $response->withHeader('Server', 'Hyperf')->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
+            return $response->withHeader('Server', 'Hyperf')->withStatus(200)->withBody(new SwooleStream(json_encode($body)));
+        }
+
     }
 
     public function isValid(Throwable $throwable): bool

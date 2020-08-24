@@ -43,4 +43,9 @@ class IndexController extends AbstractController
     {
         return jsonSuccess('success',$articleService->categories());
     }
+
+    public function getArticle(Request $request,ArticleService $articleService)
+    {
+        return jsonSuccess('success',$articleService->getArticle($request->query('id')));
+    }
 }

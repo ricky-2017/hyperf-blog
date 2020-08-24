@@ -15,6 +15,7 @@ class ReturnCode
     const INVALID_PARAM = [40000, '请求参数错误'];
     const UNSUPPORTED_HTTP_METHOD = [40001, 'HTTP请求方法错误'];
     const DATA_CONSTRAINT_ERROR = [40002, '数据约束错误'];
+    const DATA_NOT_FOUND = [40003,'数据不存在'];
 
     const NULL_ACCESS_TOKEN = [40300, '授权标识为空'];
     const ACCESS_TOKEN_EXPIRE = [40301, '授权标识已过期'];

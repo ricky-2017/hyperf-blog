@@ -17,6 +17,21 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class CorsMiddleware implements MiddlewareInterface
 {
+//    /**
+//     * @var HttpResponse
+//     */
+//    protected $response;
+//
+//    protected $prefix = 'Bearer';
+//
+//    protected $jwt;
+//
+//    public function __construct(HttpResponse $response, Jwt $jwt)
+//    {
+//        $this->response = $response;
+//        $this->jwt = $jwt;
+//    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = Context::get(ResponseInterface::class);

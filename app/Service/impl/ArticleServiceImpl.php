@@ -9,8 +9,10 @@
 namespace App\Service\impl;
 
 
+use App\Constants\ReturnCode;
 use App\Model\Article;
 use App\Model\ArticleTagMapper;
+use App\Model\BlogConfig;
 use App\Model\Category;
 use App\Model\Tag;
 use App\Service\ArticleService;
@@ -36,7 +38,7 @@ class ArticleServiceImpl implements ArticleService
         {
             $where[] = ['title','like','%'.$search['searchValue'].'%'];
         }
-        if(isset($search['by']) && $search['by'] == 'category' && isset($search['categoryId']))
+        if(isset($search['by']) && $search['by'] === 'category' && isset($search['categoryId']))
         {
             $where[] = ['category_id','=',$search['categoryId']];
         }
@@ -47,15 +49,16 @@ class ArticleServiceImpl implements ArticleService
             if($articles->isNotEmpty())
             {
                 $articles_ids = array_column($articles->toArray(),'article_id');
-                // TODO 查看查询出错原因
-                $where[] = ['id','In',$articles_ids];
             }
         }
-//        return $where;
-        $articles = Article::with(['tags','category'])
-            ->where($where)
-            ->orderBy('publish_time', 'desc')
-            ->paginate($pageSize);
+
+        $query = Article::with(['tags','category'])->where($where);
+
+        if(isset($articles_ids) && !empty($articles_ids))
+            $query->whereIn('id',$articles_ids);
+
+         $articles = $query->orderBy('publish_time', 'desc')
+                    ->paginate($pageSize);
 
         $list = $articles->items();
 
@@ -158,5 +161,27 @@ class ArticleServiceImpl implements ArticleService
             return ['count'=>0,'list'=>[]];
         }
 
+    }
+
+    public function getArticle($id)
+    {
+        $article_info = Article::with(['tags','category'])->where('id',$id)->first();
+
+        if(is_null($article_info))
+            bizException(ReturnCode::DATA_NOT_FOUND);
+
+        $result = arrayKeyTrans($article_info->toArray(),'hump');
+
+        $qrCode = (new BlogConfig())->getQrCode();
+
+        $result['qrcode'] = $qrCode;
+
+        $pn = (new Article)->getPreNextArticle($result['publishTime']);
+
+        $result['pn'] = $pn;
+        // 阅读数自增
+        Article::query()->where('id',$id)->increment('pageview');
+
+        return arrayKeyTrans($result,'hump');
     }
 }
