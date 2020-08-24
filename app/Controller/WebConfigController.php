@@ -20,8 +20,8 @@ class WebConfigController extends AbstractController
     public function getAboutMe()
     {
         $return['html']   = Pages::query()->where(['type'=>'about'])->value('html') ?? '';
-        $return['qrcode'] = BlogConfig::query()->select('wxpay_qrcode','alipay_qrcode')->first();
-        $return['qrcode'] = arrayKeyTrans(get_object_vars($return['qrcode']));
+        $qrcode = BlogConfig::query()->select('wxpay_qrcode','alipay_qrcode')->first();
+        $return['qrcode'] = $qrcode->toArray();
 
         return jsonSuccess('success',$return);
     }
@@ -35,7 +35,7 @@ class WebConfigController extends AbstractController
     public function blogInfo()
     {
         $info = BlogConfig::query()->select('blog_name','avatar','sign','github','wxpay_qrcode','alipay_qrcode')->first();
-        $info = arrayKeyTrans(get_object_vars($info));
+        $info = arrayKeyTrans($info->toArray());
 
         $info['articleCount']   = Article::query()->where(['status'=>0])->count();
         $info['categoryCount']  = Category::query()->where('article_count','>',0)->count();

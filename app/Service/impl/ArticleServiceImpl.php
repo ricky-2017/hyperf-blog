@@ -38,7 +38,7 @@ class ArticleServiceImpl implements ArticleService
         }
         if(isset($search['by']) && $search['by'] == 'category' && isset($search['categoryId']))
         {
-            $where[] = ['category_id','eq',$search['categoryId']];
+            $where[] = ['category_id','=',$search['categoryId']];
         }
 
         if(isset($search['by']) && $search['by'] == 'tag' && isset($search['tagId']))
@@ -48,10 +48,10 @@ class ArticleServiceImpl implements ArticleService
             {
                 $articles_ids = array_column($articles->toArray(),'article_id');
                 // TODO 查看查询出错原因
-                $where[] = ['id','in',$articles_ids];
+                $where[] = ['id','In',$articles_ids];
             }
         }
-
+//        return $where;
         $articles = Article::with(['tags','category'])
             ->where($where)
             ->orderBy('publish_time', 'desc')
@@ -98,10 +98,11 @@ class ArticleServiceImpl implements ArticleService
             'name as tagName',
             'create_time as createTime',
             'update_time as updateTime',
-            'status',
-            'article_count as articleCount'
+            'status'
         ];
+
         $tags = ArticleTagMapper::query()->groupBy('tag_id')->get('tag_id');
+
         if($tags->isNotEmpty())
         {
             $tags = array_column($tags->toArray(),'tag_id');
@@ -109,11 +110,22 @@ class ArticleServiceImpl implements ArticleService
             $tagList = Tag::query()->where('status', 0)
                 ->whereIn('id', $tags)
                 ->orderByDesc('aid')
-                ->get($field);
+                ->get($field)
+                ->map(function ($item, $key){
+                    $item['articleCount'] = Article::query()
+                        ->where('category_id',$item['categoryId'])
+                        ->where('status',0)
+                        ->count();
+                    return $item;
+                });
+
             $tagList = Collection::make($tagList)->toArray();
-            return ['count' => count($tagList),'list' => arrayKeyTrans($tagList,'hump')];
+            return ['count' => count($tagList),
+                    'list'  => arrayKeyTrans($tagList,'hump')];
         }else{
-            return ['count'=>0,'list'=>[]];
+            return ['count'=>0,
+                    'list'=>[]
+                ];
         }
 
     }
@@ -124,13 +136,27 @@ class ArticleServiceImpl implements ArticleService
             'name as categoryName',
             'create_time as createTime',
             'update_time as updateTime',
-            'status',
-            'article_count as articleCount'];
-        $categoryList = Category::query()
-            ->where('article_count', '>', 0)
-            ->orderByDesc('aid')
-            ->get($field);
-        $categoryList = Collection::make($categoryList)->toArray();
-        return ['count' => count($categoryList),'list' => arrayKeyTrans($categoryList,'hump')];
+            'status'];
+        $categories = Article::query()->where('status',0)->groupBy('category_id')->get('category_id');
+        if($categories->isNotEmpty())
+        {
+            $categories = array_column($categories->toArray(),'category_id');
+            $categoryList = Category::query()
+                ->whereIn('id', $categories)
+                ->orderByDesc('aid')
+                ->get($field)
+                ->map(function ($item, $key){
+                    $item['articleCount'] = Article::query()
+                        ->where('category_id',$item['categoryId'])
+                        ->where('status',0)
+                        ->count();
+                    return $item;
+                });
+            $categoryList = Collection::make($categoryList)->toArray();
+            return ['count' => count($categoryList),'list' => arrayKeyTrans($categoryList,'hump')];
+        }else{
+            return ['count'=>0,'list'=>[]];
+        }
+
     }
 }
