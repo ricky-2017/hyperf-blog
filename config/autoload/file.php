@@ -10,11 +10,12 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    'default' => 'qiniu',
+    'default' => 'local',
     'storage' => [
         'local' => [
             'driver' => \Hyperf\Filesystem\Adapter\LocalAdapterFactory::class,
-            'root' => __DIR__ . '/../../runtime',
+//            'root' => __DIR__ . '/../../runtime',
+            'root' => __DIR__ . '/../../public',
         ],
         'ftp' => [
             'driver' => \Hyperf\Filesystem\Adapter\FtpAdapterFactory::class,
@@ -73,7 +74,7 @@ return [
             'accessKey' => env('QINIU_ACCESS_KEY','OZKsK7JOwLIXu7bcdkZmeiKCr5VCmKPUfc2jF8Zs'),
             'secretKey' => env('QINIU_SECRET_KEY','n67eU-cjW-sAlAvLgR0Dz_4Jh79xO4-Ig8SmFHDq'),
             'bucket' => env('QINIU_BUCKET','rubio'),
-            'domain' => env('QINIU_DOMAIN','rubio.s3-cn-south-1.qiniucs.com'),
+            'domain' => env('QINBIU_DOMAIN','rubio.s3-cn-south-1.qiniucs.com'),
         ],
         'cos' => [
             'driver' => \Hyperf\Filesystem\Adapter\CosAdapterFactory::class,

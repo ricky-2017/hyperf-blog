@@ -7,9 +7,8 @@
  */
 namespace App\Controller;
 
-use League\Flysystem\Filesystem;
 use Hyperf\HttpServer\Request;
-
+use Hyperf\Filesystem\FilesystemFactory;
 
 class UploadController extends AbstractController
 {
@@ -20,15 +19,22 @@ class UploadController extends AbstractController
         return jsonSuccess('success',['token'=>$data]);
     }
 
-    public function uploads(Request $request,Filesystem $filesystem)
+    // 文件存储
+    public function uploads(Request $request,FilesystemFactory $factory)
     {
+        $factory = $factory->get('local');
+
         // Process Upload
         $file = $request->file('file');
         $stream = fopen($file->getRealPath(), 'r+');
-        $filesystem->writeStream(
-            'uploads/'.$file->getClientFilename(),
+
+        $savePath = '/upload/images/'.date('Y-m-d').'/'.create_id().'.'.$file->getExtension();
+        $factory->writeStream(
+            $savePath,
             $stream
         );
         fclose($stream);
+
+        return jsonSuccess('success',['imgUrl' => 'http://swooleapi.lubiao9.cn'.$savePath]);
     }
 }
