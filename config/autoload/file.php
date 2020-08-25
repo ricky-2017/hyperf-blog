@@ -71,8 +71,8 @@ return [
         ],
         'qiniu' => [
             'driver' => \Hyperf\Filesystem\Adapter\QiniuAdapterFactory::class,
-            'accessKey' => env('QINIU_ACCESS_KEY','OZKsK7JOwLIXu7bcdkZmeiKCr5VCmKPUfc2jF8Zs'),
-            'secretKey' => env('QINIU_SECRET_KEY','n67eU-cjW-sAlAvLgR0Dz_4Jh79xO4-Ig8SmFHDq'),
+            'accessKey' => env('QINIU_ACCESS_KEY','n67eU-cjW-sAlAvLgR0Dz_4Jh79xO4-Ig8SmFHDq'),
+            'secretKey' => env('QINIU_SECRET_KEY','OZKsK7JOwLIXu7bcdkZmeiKCr5VCmKPUfc2jF8Zs'),
             'bucket' => env('QINIU_BUCKET','rubio'),
             'domain' => env('QINBIU_DOMAIN','rubio.s3-cn-south-1.qiniucs.com'),
         ],

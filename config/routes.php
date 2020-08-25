@@ -40,6 +40,7 @@ Router::addGroup('/a/',function (){
     Router::post('login', 'App\Controller\AdminController@login');// 登录
     Router::get('qiniu/token', 'App\Controller\UploadController@getToken');//
     Router::post('qiniu/uploads', 'App\Controller\UploadController@uploads');//
+    Router::post('qiniu/upToQiniu', 'App\Controller\UploadController@upToQiniu');//
 });
 
 Router::addGroup('/a/',function() {
