@@ -216,7 +216,7 @@ class ArticleServiceImpl implements ArticleService
                 $common_part['status'] = $data['status'];
                 if($data['status'] == 0)
                 {
-                    $data['publish_time'] = time();
+                    $common_part['publish_time'] = time();
                 }
             }
 

@@ -65,6 +65,7 @@ class ArticleController extends AbstractController
     {
         $data = $this->request->all();
         $data['status'] = 0;
+        $data['publish_time'] = time();
 
         $article_id = $articleService->saveArticle($data);
 
