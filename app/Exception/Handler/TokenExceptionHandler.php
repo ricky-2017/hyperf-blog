@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace App\Exception\Handler;
 
+use App\Constants\ReturnCode;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -37,9 +38,9 @@ class TokenExceptionHandler extends ExceptionHandler
             $this->stopPropagation();
 
             $body = [
-                'code'        => $throwable->getCode(),
+                'code'        => ReturnCode::ACCESS_TOKEN_EXPIRE[0],
                 'data'        => [],
-                'message'     => $throwable->getMessage()
+                'message'     => ReturnCode::ACCESS_TOKEN_EXPIRE[1]
             ];
 
             return $response->withHeader('Server', 'Hyperf')->withStatus(200)->withBody(new SwooleStream(json_encode($body)));

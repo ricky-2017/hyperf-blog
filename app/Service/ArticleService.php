@@ -20,4 +20,6 @@ interface ArticleService
     function categories();
 
     function getArticle($id);
+
+    function saveArticle($data);
 }
