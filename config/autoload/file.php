@@ -75,6 +75,7 @@ return [
             'secretKey' => env('QINIU_SECRET_KEY','OZKsK7JOwLIXu7bcdkZmeiKCr5VCmKPUfc2jF8Zs'),
             'bucket' => env('QINIU_BUCKET','rubio'),
             'domain' => env('QINBIU_DOMAIN','rubio.s3-cn-south-1.qiniucs.com'),
+            'prefix' => env('QINBIU_PREFIX','http://qiniu.lubiao9.cn'),
         ],
         'cos' => [
             'driver' => \Hyperf\Filesystem\Adapter\CosAdapterFactory::class,

@@ -55,7 +55,6 @@ class JwtAuthMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-
         throw new TokenValidException('Token authentication does not pass', 401);
     }
 }
