@@ -71,11 +71,11 @@ return [
         ],
         'qiniu' => [
             'driver' => \Hyperf\Filesystem\Adapter\QiniuAdapterFactory::class,
-            'accessKey' => env('QINIU_ACCESS_KEY','n67eU-cjW-sAlAvLgR0Dz_4Jh79xO4-Ig8SmFHDq'),
-            'secretKey' => env('QINIU_SECRET_KEY','OZKsK7JOwLIXu7bcdkZmeiKCr5VCmKPUfc2jF8Zs'),
-            'bucket' => env('QINIU_BUCKET','rubio'),
-            'domain' => env('QINBIU_DOMAIN','rubio.s3-cn-south-1.qiniucs.com'),
-            'prefix' => env('QINBIU_PREFIX','http://qiniu.lubiao9.cn'),
+            'accessKey' => env('QINIU_ACCESS_KEY'),
+            'secretKey' => env('QINIU_SECRET_KEY'),
+            'bucket' => env('QINIU_BUCKET'),
+            'domain' => env('QINBIU_DOMAIN'),
+            'prefix' => env('QINBIU_PREFIX'),
         ],
         'cos' => [
             'driver' => \Hyperf\Filesystem\Adapter\CosAdapterFactory::class,

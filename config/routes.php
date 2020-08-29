@@ -32,8 +32,8 @@ Router::addGroup('/w/',function() {
     Router::get('friends/list','App\Controller\WebConfigController@getFriends');// 获取友链列表
 
     // 获取文章评论列表
-    Router::get('comments/list','App\Controller\ArticleController@getComments'); // 评论列表 yse
-    Router::post('comments/add','App\Controller\ArticleController@addComments'); // 添加评论 yse
+    Router::get('comments/list','App\Controller\IndexController@getComments'); // 评论列表 yse
+    Router::post('comments/add','App\Controller\IndexController@addComments'); // 添加评论 yse
 });
 
 Router::addGroup('/a/',function (){

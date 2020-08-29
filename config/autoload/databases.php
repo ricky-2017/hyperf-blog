@@ -12,12 +12,11 @@ declare(strict_types=1);
 return [
     'default' => [
         'driver' => env('DB_DRIVER', 'mysql'),
-//        'host' => env('DB_HOST', '132.232.105.96'),
-        'host' => env('DB_HOST', '172.17.0.1'),
-        'database' => env('DB_DATABASE', 'vueBlog'),
+        'host' => env('DB_HOST'),
+        'database' => env('DB_DATABASE'),
         'port' => env('DB_PORT', 3306),
-        'username' => env('DB_USERNAME', 'yourslxy'),
-        'password' => env('DB_PASSWORD', 'lxy950315'),
+        'username' => env('DB_USERNAME'),
+        'password' => env('DB_PASSWORD'),
         'charset' => env('DB_CHARSET', 'utf8'),
         'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
         'prefix' => env('DB_PREFIX', ''),
