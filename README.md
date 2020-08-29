@@ -2,6 +2,9 @@
 
 - 感谢codebear兄弟的开源博客，[博客前端来源](http://codebear.cn/?ADTAG=gh)
 - 个人在CI的框架的基础上，使用了hyperf框架进行了重构，数据表稍作调整但结构改动不大。
+- hyperf版本
+- [前端仓库地址 hyperf-master分支](https://gitee.com/rubio9/vueBlog/tree/hyperf-master/)
+- [API仓库地址](https://github.com/ricky-2017/hyperf-blog)
 
 ### 上传文件模块可选择七牛云或者本地上传，具体配置在config/autoload/file.php 文件中进行配置
 
