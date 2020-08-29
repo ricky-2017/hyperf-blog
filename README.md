@@ -1,6 +1,34 @@
 # Introduction
 
-This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
+- 感谢codebear兄弟的开源博客，[博客前端来源](http://codebear.cn/?ADTAG=gh)
+- 个人在CI的框架的基础上，使用了hyperf框架进行了重构，数据表稍作调整但结构改动不大。
+
+### 上传文件模块可选择七牛云或者本地上传，具体配置在config/autoload/file.php 文件中进行配置
+
+- 开发阶段可以使用 php bin/hyperf.php server:watch 进行热更新监控
+- 具体配置项看.env.example文件 
+
+### 完成进度
+- [x] 首页（文章列表）
+- [x] 分类/标签列表
+- [x] 文章归档
+- [x] ‘关于’页面
+- [x] 文章详情页
+- [x] 分类/标签 对应的文章列表
+- [x] 搜索功能（按文章标题和简介搜索）
+- [x] 文章详情页标题目录导航
+- [x] 简历页
+
+### 博客后台管理实现功能
+- [x] 登录
+- [x] 发布/编辑/删除文章
+- [x] 添加/编辑/删除分类
+- [x] 添加/编辑/删除标签
+- [x] 添加/编辑/删除友链
+- [x] 编辑‘关于’页面
+- [x] 编辑博客配置页面（头像、昵称等）
+- [x] 管理评论
+- [x] 简历编辑
 
 # Requirements
 
@@ -34,3 +62,6 @@ $ php bin/hyperf.php start
 This will start the cli-server on port `9501`, and bind it to all network interfaces. You can then visit the site at `http://localhost:9501/`
 
 which will bring up Hyperf default home page.
+
+
+
