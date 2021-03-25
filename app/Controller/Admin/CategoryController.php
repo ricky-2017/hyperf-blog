@@ -23,6 +23,7 @@ class CategoryController extends AbstractController
     function list()
     {
         $pageSize = $this->request->query('pageSize',10);
+
         $field = [
             'article_count as articleCount',
             'create_time as createTime',
