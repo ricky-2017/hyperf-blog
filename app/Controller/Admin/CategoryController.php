@@ -48,6 +48,7 @@ class CategoryController extends AbstractController
             'page'      => $data->currentPage(),
             'pageSize'  => $data->perPage(),
         ];
+
         return jsonSuccess('success',$return);
 
         $data = Db::table('category')->select($field)->paginate($pageSize);
