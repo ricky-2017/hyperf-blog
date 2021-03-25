@@ -8,13 +8,18 @@ use App\Model\Article;
 use App\Model\Category;
 use Hyperf\DbConnection\Db;
 
-
 class CategoryController extends AbstractController
 {
     function getCategory()
     {
         $categoryId = $this->request->query('categoryId');
-        $field = ['id', 'name', 'article_count as articleCount'];
+
+        $field = [
+            'id',
+            'name',
+            'article_count as articleCount'
+        ];
+
         $data = Category::query()->where('id','=',$categoryId)->select($field)->get();
 
         return jsonSuccess('success',$data);
@@ -33,6 +38,17 @@ class CategoryController extends AbstractController
             'status',
             'can_del as canDel',
         ];
+
+        $data = Category::query()->paginate($pageSize);
+        $count = Category::query()->count();
+
+        $return = [
+            'count'     => $count,
+            'list'      => $data->items(),
+            'page'      => $data->currentPage(),
+            'pageSize'  => $data->perPage(),
+        ];
+        return jsonSuccess('success',$return);
 
         $data = Db::table('category')->select($field)->paginate($pageSize);
         $count = Db::table('category')->count();
