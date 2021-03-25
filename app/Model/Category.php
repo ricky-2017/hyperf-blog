@@ -13,22 +13,20 @@ class Category extends Model
     const CREATED_AT = 'create_time';
     const UPDATED_AT = 'update_time';
 
-    protected $guarded =[
+    protected $visible = [
         'id',
-        'id' => 'categoryId',
-        'article_count as articleCount',
-        'create_time as createTime',
-        'update_time as updateTime',
-        'id as categoryId',
-        'name as categoryName',
+        'article_count',
+        'create_time',
+        'update_time',
+        'name',
         'status',
-        'can_del as canDel',
+        'can_del',
     ];
 
     // 一对多文章
     function article()
     {
-        return $this->hasMany(Article::class,'category_id','id');
+        return $this->hasMany(Article::class, 'category_id', 'id');
     }
 
 }
