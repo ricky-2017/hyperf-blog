@@ -89,8 +89,8 @@ Router::addGroup('/a/',function() {
     // 系统信息
     Router::get('sys/log', 'App\Controller\Admin\SystemController@getSysLog');
     Router::get('statistics/home', 'App\Controller\Admin\SystemController@getHomeStatistics');
-//});
-}, ['middleware' => [App\Middleware\JwtAuthMiddleware::class]]);
+});
+//}, ['middleware' => [App\Middleware\JwtAuthMiddleware::class]]);
 
 
 
