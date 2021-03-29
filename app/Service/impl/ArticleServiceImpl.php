@@ -136,13 +136,6 @@ class ArticleServiceImpl implements ArticleService
 
     public function categories()
     {
-        $field = [
-            'id as categoryId',
-            'name as categoryName',
-            'create_time as createTime',
-            'update_time as updateTime',
-            'status'
-        ];
 
         $categories = Article::query()->where('status', 0)->groupBy('category_id')->get('category_id');
 
@@ -151,7 +144,13 @@ class ArticleServiceImpl implements ArticleService
             $categoryList = Category::query()
                 ->whereIn('id', $categories)
                 ->orderByDesc('aid')
-                ->get($field)
+                ->get([
+                    'id as categoryId',
+                    'name as categoryName',
+                    'create_time as createTime',
+                    'update_time as updateTime',
+                    'status'
+                ])
                 ->map(function ($item, $key) {
                     $item['articleCount'] = Article::query()
                         ->where('category_id', $item['categoryId'])
