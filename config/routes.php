@@ -11,6 +11,9 @@ declare(strict_types=1);
  */
 use Hyperf\HttpServer\Router\Router;
 
+
+Router::addRoute(['GET', 'POST', 'HEAD'],'/test','App\Controller\AqController@testPush');
+
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
 
 //Router::addRoute(['GET', 'POST', 'HEAD'], '/w/article/list', 'App\Controller\IndexController@index');
@@ -89,8 +92,9 @@ Router::addGroup('/a/',function() {
     // 系统信息
     Router::get('sys/log', 'App\Controller\Admin\SystemController@getSysLog');
     Router::get('statistics/home', 'App\Controller\Admin\SystemController@getHomeStatistics');
-});
-//}, ['middleware' => [App\Middleware\JwtAuthMiddleware::class]]);
+//});
+}, ['middleware' => [App\Middleware\JwtAuthMiddleware::class]]);
+
 
 
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller;
 
 use App\Service\ArticleService;
@@ -17,35 +18,45 @@ use Hyperf\HttpServer\Request;
 
 class IndexController extends AbstractController
 {
-    public function index(Request $request,ArticleService $articleService)
+    public function index(Request $request, ArticleService $articleService)
     {
-        $result = $articleService->list($request->query(),$request->query('page'),$request->query('pageSize'));
+        $result = $articleService->list($request->query(), $request->query('page'), $request->query('pageSize'));
 
-        return jsonSuccess('',$result);
+        return jsonSuccess('', $result);
     }
 
-    public function getArticleArchives(Request $request,ArticleService $articleService)
+    public function getArticleArchives(Request $request, ArticleService $articleService)
     {
 
-        $result = $articleService->archivesList($request->query(),$request->query('page'),$request->query('pageSize'));
+        $result = $articleService->archivesList($request->query(), $request->query('page'), $request->query('pageSize'));
 
-        return jsonSuccess('success',$result);
+        return jsonSuccess('success', $result);
     }
 
     // tags
     public function tagList(ArticleService $articleService)
     {
-        return jsonSuccess('success',$articleService->tags());
+        return jsonSuccess('success', $articleService->tags());
     }
 
     // category
     public function categoryList(ArticleService $articleService)
     {
-        return jsonSuccess('success',$articleService->categories());
+        return jsonSuccess('success', $articleService->categories());
     }
 
-    public function getArticle(Request $request,ArticleService $articleService)
+    public function getArticle(Request $request, ArticleService $articleService)
     {
-        return jsonSuccess('success',$articleService->getArticle($request->query('id')));
+        return jsonSuccess('success', $articleService->getArticle($request->query('id')));
+    }
+
+    public function addComment(Request $request, ArticleService $articleService)
+    {
+        return jsonSuccess('success', $articleService->addComment($request->post()));
+    }
+
+    public function getComment(Request $request, ArticleService $articleService)
+    {
+        return jsonSuccess('success', $articleService->getComment($request->query('articleId')));
     }
 }

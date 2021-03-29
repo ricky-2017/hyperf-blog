@@ -22,4 +22,8 @@ interface ArticleService
     function getArticle($id);
 
     function saveArticle($data);
+
+    function addComment($data);
+
+    function getComment($article_id);
 }

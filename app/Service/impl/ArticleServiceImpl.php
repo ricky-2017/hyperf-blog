@@ -266,4 +266,25 @@ class ArticleServiceImpl implements ArticleService
 //        save_system_log('更新了文章'.$article_id,$_SERVER['REMOTE_ADDR']);
         return $article_id;
     }
+
+    public function addComment($data)
+    {
+
+    }
+
+    public function getComment($article_id)
+    {
+        // 检测文章是否存在
+        $is = Article::query()->where('aid','=',$article_id)->exists();
+        if (!$is) {
+            bizException(ReturnCode::DATA_NOT_FOUND,'文章不存在');
+        }
+
+//        $list = (new Comments())->getComments($articleId);
+
+//        return [
+//            'count' => count($list),
+//            'list'  => $list
+//        ];
+    }
 }
