@@ -20,7 +20,7 @@ class CategoryController extends AbstractController
             'article_count as articleCount'
         ];
 
-        $data = Db::table('category')->where('id','=',$categoryId)->select($field)->get();
+        $data = Category::query()->where('id','=',$categoryId)->select($field)->get();
 
         return jsonSuccess('success',$data);
     }

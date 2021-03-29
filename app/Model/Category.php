@@ -12,17 +12,7 @@ class Category extends Model
 
     const CREATED_AT = 'create_time';
     const UPDATED_AT = 'update_time';
-
-    protected $visible = [
-        'id',
-        'article_count',
-        'create_time',
-        'update_time',
-        'name',
-        'status',
-        'can_del',
-    ];
-
+    
     // 一对多文章
     function article()
     {
