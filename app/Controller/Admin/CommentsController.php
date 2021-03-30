@@ -21,47 +21,41 @@ class CommentsController extends AbstractController
         $data = $comments->getComments($articleId);
         return jsonSuccess('',
             [
-               'count'  => count($data),
-               'list'   => $data
+                'count' => count($data),
+                'list' => $data
             ]);
     }
 
     function getAllComments()
     {
         $pageSize = $this->request->query('pageSize');
-//        $page = request()->get('page');
-        $data = Comments::query()->leftJoin('article','comments.article_id','=','article.id')
-                                 ->select(['comments.*','article.title as articleTitle'])
-                                 ->paginate($pageSize);
+
+        $data = Comments::query()
+            ->leftJoin('article', 'comments.article_id', '=', 'article.id')
+            ->select(['comments.*', 'article.title as articleTitle'])
+            ->paginate($pageSize);
         $list = [];
-//        halt($data->items());
-        if(!empty($data->items()))
-        {
-            foreach ($data->items() as $vo)
-            {
-                $list[] = arrayKeyTrans(Collection::make($vo)->toArray(),'hump');
+
+        if (!empty($data->items())) {
+            foreach ($data->items() as $vo) {
+                $list[] = arrayKeyTrans(Collection::make($vo)->toArray(), 'hump');
             }
         }
 
         $return = [
-          'count' => $data->total(),
-          'list' => $list,
-          'page' => $data->currentPage(),
-          'pageSize' => $data->perPage(),
+            'count' => $data->total(),
+            'list' => $list,
+            'page' => $data->currentPage(),
+            'pageSize' => $data->perPage(),
         ];
 
-        return jsonSuccess('',$return);
-    }
-
-    function add()
-    {
-
+        return jsonSuccess('', $return);
     }
 
     function delete()
     {
         $id = $this->request->post('commentsId');
-        Db::table('comments')->where('id',$id)->update(['status'=>1,'delete_time'=>time()]);
+        Db::table('comments')->where('id', $id)->update(['status' => 1, 'delete_time' => time()]);
         return jsonSuccess();
     }
 }

@@ -8,6 +8,9 @@
 
 namespace App\Model;
 
+use Hyperf\DbConnection\Db;
+use Hyperf\Utils\Collection;
+
 class Comments extends Model
 {
     protected $table ='comments';
@@ -15,7 +18,6 @@ class Comments extends Model
     protected $dateFormat = 'U';
 
     const CREATED_AT = 'create_time';
-//    const UPDATED_AT = 'update_time';
 
     protected $casts = [
         'create_time' => 'timestamp'
@@ -27,23 +29,6 @@ class Comments extends Model
         parent::__construct($attributes);
     }
 
-//    public function add($articleId, $parentId, $replyId, $name, $content, $sourceContent, $email)
-//    {
-//        $comments = array(
-//            'name'=> $name,
-//            'email'=> $email,
-//            'content'=> $content,
-//            'source_content'=> $sourceContent,
-//            'create_time'=> time(),
-//            'article_id'=> $articleId,
-//            'reply_id'=> $replyId,
-//            'parent_id'=> $parentId
-//        );
-//
-//        $this->db->insert(TABLE_COMMENTS, $comments);
-//
-//        return success('评论成功');
-//    }
 
     // 评论列表
     public function getComments($articleId)
@@ -56,7 +41,7 @@ class Comments extends Model
                 'content',
                 'create_time as createTime',
                 'is_author as isAuthor'];
-        $list = DB::table('comments')
+        $list = Db::table('comments')
             ->orderByDesc('create_time')
             ->where('status','=','0')
             ->where('article_id','=', $articleId)

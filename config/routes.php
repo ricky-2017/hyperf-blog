@@ -11,32 +11,26 @@ declare(strict_types=1);
  */
 use Hyperf\HttpServer\Router\Router;
 
-
-Router::addRoute(['GET', 'POST', 'HEAD'],'/test','App\Controller\AqController@testPush');
-
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
 
-//Router::addRoute(['GET', 'POST', 'HEAD'], '/w/article/list', 'App\Controller\IndexController@index');
-
-
 Router::addGroup('/w/',function() {
-    Router::get('article/list', 'App\Controller\IndexController@index');// 获取文章列表 yes
-    Router::get('article/archives', 'App\Controller\IndexController@getArticleArchives');// 获取文章归档列表 yes
-    Router::get('article', 'App\Controller\IndexController@getArticle');// 获取文章信息 yes
-    Router::get('article/search', 'App\Controller\IndexController@search');// 按文章标题和简介搜索 yes
+    Router::get('article/list', 'App\Controller\IndexController@index');// 获取文章列表
+    Router::get('article/archives', 'App\Controller\IndexController@getArticleArchives');// 获取文章归档列表
+    Router::get('article', 'App\Controller\IndexController@getArticle');// 获取文章信息
+    Router::get('article/search', 'App\Controller\IndexController@search');// 按文章标题和简介搜索
 
-    Router::get('category/list','App\Controller\IndexController@categoryList');//获取分类列表 yes
-    Router::get('tag/list','App\Controller\IndexController@tagList');//获取标签列表 yes
+    Router::get('category/list','App\Controller\IndexController@categoryList');//获取分类列表
+    Router::get('tag/list','App\Controller\IndexController@tagList');//获取标签列表
 
     // 网站配置信息
-    Router::get('getAbout','App\Controller\WebConfigController@getAboutMe');  //yes
-    Router::get('getResume','App\Controller\WebConfigController@getResume');  //yes
-    Router::get('blogInfo','App\Controller\WebConfigController@blogInfo');    //yse
+    Router::get('getAbout','App\Controller\WebConfigController@getAboutMe');  //
+    Router::get('getResume','App\Controller\WebConfigController@getResume');  //
+    Router::get('blogInfo','App\Controller\WebConfigController@blogInfo');    //
     Router::get('friends/list','App\Controller\WebConfigController@getFriends');// 获取友链列表
 
     // 获取文章评论列表
-    Router::get('comments/list','App\Controller\IndexController@getComments'); // 评论列表 yse
-    Router::post('comments/add','App\Controller\IndexController@addComments'); // 添加评论 yse
+    Router::get('comments/list','App\Controller\IndexController@getComment'); // 评论列表
+    Router::post('comments/add','App\Controller\IndexController@addComment'); // 添加评论
 });
 
 Router::addGroup('/a/',function (){

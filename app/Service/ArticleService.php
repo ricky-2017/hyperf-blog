@@ -9,6 +9,8 @@
 namespace App\Service;
 
 
+use App\Dto\CommentDto;
+
 interface ArticleService
 {
     function list($search = [], $page, $pageSize);
@@ -23,7 +25,7 @@ interface ArticleService
 
     function saveArticle($data);
 
-    function addComment($data);
+    function addComment(CommentDto $commentDto);
 
     function getComment($article_id);
 }

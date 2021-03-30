@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\CommentDto;
 use App\Service\ArticleService;
 use Hyperf\HttpServer\Request;
-
 
 class IndexController extends AbstractController
 {
@@ -50,9 +50,9 @@ class IndexController extends AbstractController
         return jsonSuccess('success', $articleService->getArticle($request->query('id')));
     }
 
-    public function addComment(Request $request, ArticleService $articleService)
+    public function addComment(CommentDto $commentDto, ArticleService $articleService)
     {
-        return jsonSuccess('success', $articleService->addComment($request->post()));
+        return jsonSuccess('success', $articleService->addComment($commentDto));
     }
 
     public function getComment(Request $request, ArticleService $articleService)

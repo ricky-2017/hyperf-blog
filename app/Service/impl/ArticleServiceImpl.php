@@ -8,15 +8,20 @@
 
 namespace App\Service\impl;
 
+use App\Amqp\Producer\CommentProducer;
 use App\Constants\ReturnCode;
+use App\Dto\CommentDto;
 use App\Model\Article;
 use App\Model\ArticleTagMapper;
 use App\Model\BlogConfig;
 use App\Model\Category;
+use App\Model\Comments;
 use App\Model\Tag;
 use App\Service\ArticleService;
+use Hyperf\Amqp\Producer;
 use Hyperf\DbConnection\Db;
 use Hyperf\Logger\LoggerFactory;
+use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Collection;
 
 class ArticleServiceImpl implements ArticleService
@@ -242,8 +247,7 @@ class ArticleServiceImpl implements ArticleService
                         // 新插入的标签
                         if (isset($vo['name'])) {
                             $id = create_id();
-//                            app(Tag::class)->data()->save();
-//                            (new Tag())->save(['name' => $vo['name'],'id'=>$id]);
+
                             $tag = new Tag();
                             $tag->name = $vo['name'];
                             $tag->id = $id;
@@ -252,39 +256,38 @@ class ArticleServiceImpl implements ArticleService
                             $mapper[] = ['article_id' => $article_id, 'tag_id' => $id, 'create_time' => time()];
                         }
                     }
-
-
                 }
                 DB::table('article_tag_mapper')->insert($mapper);
             }
 
             DB::commit();
+            return $article_id;
         } catch (\Exception $e) {
             DB::rollBack();
             bizException(ReturnCode::DATA_CONSTRAINT_ERROR, '保存失败' . $e->getMessage());
         }
-//        save_system_log('更新了文章'.$article_id,$_SERVER['REMOTE_ADDR']);
-        return $article_id;
     }
 
-    public function addComment($data)
+    public function addComment(CommentDto $commentDto)
     {
-
+        $message = new CommentProducer(CommentDto::fromRequest()->toArray());
+        $producer = ApplicationContext::getContainer()->get(Producer::class);
+        return $producer->produce($message);
     }
 
     public function getComment($article_id)
     {
         // 检测文章是否存在
-        $is = Article::query()->where('aid','=',$article_id)->exists();
+        $is = Article::query()->where('aid', '=', $article_id)->exists();
         if (!$is) {
-            bizException(ReturnCode::DATA_NOT_FOUND,'文章不存在');
+            bizException(ReturnCode::DATA_NOT_FOUND, '文章不存在');
         }
 
-//        $list = (new Comments())->getComments($articleId);
+        $list = (new Comments())->getComments($article_id);
 
-//        return [
-//            'count' => count($list),
-//            'list'  => $list
-//        ];
+        return [
+            'count' => count($list),
+            'list' => $list
+        ];
     }
 }
