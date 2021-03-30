@@ -14,33 +14,45 @@ use Hyperf\HttpServer\Router\Router;
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
 
 Router::addGroup('/w/',function() {
+    // +----------------------------------------------------------------------
+    // | 文章模块
+    // +----------------------------------------------------------------------
     Router::get('article/list', 'App\Controller\IndexController@index');// 获取文章列表
     Router::get('article/archives', 'App\Controller\IndexController@getArticleArchives');// 获取文章归档列表
     Router::get('article', 'App\Controller\IndexController@getArticle');// 获取文章信息
     Router::get('article/search', 'App\Controller\IndexController@search');// 按文章标题和简介搜索
-
     Router::get('category/list','App\Controller\IndexController@categoryList');//获取分类列表
     Router::get('tag/list','App\Controller\IndexController@tagList');//获取标签列表
 
-    // 网站配置信息
+    // +----------------------------------------------------------------------
+    // | 网站配置信息
+    // +----------------------------------------------------------------------
     Router::get('getAbout','App\Controller\WebConfigController@getAboutMe');  //
     Router::get('getResume','App\Controller\WebConfigController@getResume');  //
     Router::get('blogInfo','App\Controller\WebConfigController@blogInfo');    //
     Router::get('friends/list','App\Controller\WebConfigController@getFriends');// 获取友链列表
 
-    // 获取文章评论列表
+    // +----------------------------------------------------------------------
+    // | 文章评论
+    // +----------------------------------------------------------------------
     Router::get('comments/list','App\Controller\IndexController@getComment'); // 评论列表
     Router::post('comments/add','App\Controller\IndexController@addComment'); // 添加评论
 });
 
 Router::addGroup('/a/',function (){
-    Router::post('login', 'App\Controller\AdminController@login');// 登录
-    Router::get('qiniu/token', 'App\Controller\UploadController@getToken');//
-    Router::post('uploads', 'App\Controller\UploadController@uploads');//
-    Router::post('qiniu/upToQiniu', 'App\Controller\UploadController@upToQiniu');//
+    // +----------------------------------------------------------------------
+    // | 登录模块
+    // +----------------------------------------------------------------------
+    Router::post('login', 'App\Controller\AdminController@login');
+    Router::get('qiniu/token', 'App\Controller\UploadController@getToken');
+    Router::post('uploads', 'App\Controller\UploadController@uploads');
+    Router::post('qiniu/upToQiniu', 'App\Controller\UploadController@upToQiniu');
 });
 
 Router::addGroup('/a/',function() {
+    // +----------------------------------------------------------------------
+    // | 博客配置模块
+    // +----------------------------------------------------------------------
     Router::get('webConfig', 'App\Controller\Admin\WebConfigController@getWebConfig');
     Router::post('webConfig/modify', 'App\Controller\Admin\WebConfigController@modify');// 修改博客配置
     Router::get('webConfig/getAbout', 'App\Controller\Admin\WebConfigController@getAboutMe');// 获取 关于我
@@ -48,28 +60,36 @@ Router::addGroup('/a/',function() {
     Router::get('webConfig/getResume', 'App\Controller\Admin\WebConfigController@getResume');// 获取 我的简历
     Router::post('webConfig/modifyResume', 'App\Controller\Admin\WebConfigController@modifyResume');// 修改 我的简历
 
-    // 友链
+    // +----------------------------------------------------------------------
+    // | 友链模块
+    // +----------------------------------------------------------------------
     Router::get('friends/typeList', 'App\Controller\Admin\FriendsController@getFriendsType');
     Router::get('friends/list', 'App\Controller\Admin\FriendsController@getFriendsList');
     Router::post('friends/add', 'App\Controller\Admin\FriendsController@addFriend');
     Router::post('friends/modify', 'App\Controller\Admin\FriendsController@modifyFriend');
     Router::post('friends/delete', 'App\Controller\Admin\FriendsController@delFriend');
 
-    // 分类管理
+    // +----------------------------------------------------------------------
+    // | 分类管理模块
+    // +----------------------------------------------------------------------
     Router::get('category/get', 'App\Controller\Admin\CategoryController@getCategory');
     Router::get('category/list', 'App\Controller\Admin\CategoryController@list');
     Router::post('category/add', 'App\Controller\Admin\CategoryController@add');
     Router::post('category/modify', 'App\Controller\Admin\CategoryController@modify');
     Router::post('category/delete', 'App\Controller\Admin\CategoryController@delCategory');
 
-    // 标签管理
+    // +----------------------------------------------------------------------
+    // | 标签管理
+    // +----------------------------------------------------------------------
     Router::get('tag/get', 'App\Controller\Admin\TagController@getTag');
     Router::get('tag/list', 'App\Controller\Admin\TagController@tagList');
     Router::post('tag/add', 'App\Controller\Admin\TagController@addTag');
     Router::post('tag/modify', 'App\Controller\Admin\TagController@modifyTag');
     Router::post('tag/delete', 'App\Controller\Admin\TagController@delTag');
 
-    // 文章管理
+    // +----------------------------------------------------------------------
+    // | 文章管理
+    // +----------------------------------------------------------------------
     Router::get('article/info', 'App\Controller\Admin\ArticleController@getArticle');
     Router::get('article/list', 'App\Controller\Admin\ArticleController@getArticleList');
     Router::post('article/delete', 'App\Controller\Admin\ArticleController@delete');
@@ -77,13 +97,17 @@ Router::addGroup('/a/',function() {
     Router::post('article/publish', 'App\Controller\Admin\ArticleController@publish');
     Router::post('article/modify', 'App\Controller\Admin\ArticleController@modify');
 
-    // 评论管理
+    // +----------------------------------------------------------------------
+    // | 评论管理
+    // +----------------------------------------------------------------------
     Router::get('comments/list', 'App\Controller\Admin\CommentsController@getComments');
     Router::get('comments/alllist', 'App\Controller\Admin\CommentsController@getAllComments');
     Router::post('comments/add', 'App\Controller\Admin\CommentsController@add');
     Router::post('comments/delete', 'App\Controller\Admin\CommentsController@delete');
 
-    // 系统信息
+    // +----------------------------------------------------------------------
+    // | 系统信息
+    // +----------------------------------------------------------------------
     Router::get('sys/log', 'App\Controller\Admin\SystemController@getSysLog');
     Router::get('statistics/home', 'App\Controller\Admin\SystemController@getHomeStatistics');
 //});
