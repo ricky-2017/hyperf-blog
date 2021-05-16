@@ -19,35 +19,34 @@ class ArticleController extends AbstractController
     {
         $articleId = $this->request->query('id');
 
-        $article_info = Article::with(['tags','category'])->where('id',$articleId)->first()->toArray();
+        $article_info = Article::with(['tags', 'category'])
+            ->where('id', $articleId)
+            ->first()
+            ->toArray();
 
         $result = [
-          'article' => $article_info,
-          'category'=> $article_info['category'],
-          'tags'    => $article_info['tags'],
-
+            'article' => $article_info,
+            'category' => $article_info['category'],
+            'tags' => $article_info['tags'],
         ];
 
-        return jsonSuccess('success',arrayKeyTrans($result,'hump'));
+        return jsonSuccess('success', arrayKeyTrans($result, 'hump'));
     }
 
     function getArticleList(ArticleService $articleService)
     {
         $page = $this->request->query('page');
         $pageSize = $this->request->query('pageSize');
-
         $search = $this->request->all();
 
-        $result = $articleService->list($search, $page, $pageSize );
-
-        return jsonSuccess('success',$result);
-
+        $result = $articleService->list($page, $pageSize, $search);
+        return jsonSuccess('success', $result);
     }
 
     function delete()
     {
         $article_id = $this->request->post('id');
-        Db::table('article')->where('id',$article_id)->update(['status'=>1]);
+        Db::table('article')->where('id', $article_id)->update(['status' => 1]);
 
         return jsonSuccess();
     }
@@ -58,7 +57,7 @@ class ArticleController extends AbstractController
 
         $article_id = $articleService->saveArticle($data);
 
-        return jsonSuccess('success',$article_id);
+        return jsonSuccess('success', $article_id);
     }
 
     function publish(ArticleService $articleService)
@@ -69,7 +68,7 @@ class ArticleController extends AbstractController
 
         $article_id = $articleService->saveArticle($data);
 
-        return jsonSuccess('success',$article_id);
+        return jsonSuccess('success', $article_id);
     }
 
     function save(ArticleService $articleService)
@@ -78,8 +77,7 @@ class ArticleController extends AbstractController
 
         $article_id = $articleService->saveArticle($data);
 
-        return jsonSuccess('success',$article_id);
-
+        return jsonSuccess('success', $article_id);
     }
 
 

@@ -33,17 +33,17 @@ class ArticleServiceImpl implements ArticleService
         $this->logger = $loggerFactory->get('log', 'default');
     }
 
-    public function list($search = [], $page, $pageSize)
+    public function list($page, $pageSize, $search = [])
     {
-        $where = [];
+        $query = Article::with(['tags', 'category']);
 
-        $where[] = ['id', '<>', -1];
+        $query->where('id', '<>', -1);
 
         if (isset($search['searchValue'])) {
-            $where[] = ['title', 'like', '%' . $search['searchValue'] . '%'];
+            $query->where('title', 'like', '%' . $search['searchValue'] . '%');
         }
         if (isset($search['by']) && $search['by'] === 'category' && isset($search['categoryId'])) {
-            $where[] = ['category_id', '=', $search['categoryId']];
+            $query->where('category_id', '=', $search['categoryId']);
         }
 
         if (isset($search['by']) && $search['by'] == 'tag' && isset($search['tagId'])) {
@@ -54,12 +54,10 @@ class ArticleServiceImpl implements ArticleService
         }
 
         if (isset($search['by']) && $search['by'] == 'status' && isset($search['status'])) {
-            $where[] = ['status', '=', $search['status']];
+            $query->where('status','=', $search['status']);
         } else {
-            $where[] = ['status', '=', 0];
+            $query->where('status','=', 0);
         }
-
-        $query = Article::with(['tags', 'category'])->where($where);
 
         if (isset($articles_ids) && !empty($articles_ids))
             $query->whereIn('id', $articles_ids);
@@ -129,10 +127,13 @@ class ArticleServiceImpl implements ArticleService
                 });
 
             $tagList = Collection::make($tagList)->toArray();
-            return ['count' => count($tagList),
-                'list' => arrayKeyTrans($tagList, 'hump')];
+            return [
+                'count' => count($tagList),
+                'list' => arrayKeyTrans($tagList, 'hump')
+            ];
         } else {
-            return ['count' => 0,
+            return [
+                'count' => 0,
                 'list' => []
             ];
         }
@@ -141,7 +142,6 @@ class ArticleServiceImpl implements ArticleService
 
     public function categories()
     {
-
         $categories = Article::query()->where('status', 0)->groupBy('category_id')->get('category_id');
 
         if ($categories->isNotEmpty()) {
@@ -164,7 +164,10 @@ class ArticleServiceImpl implements ArticleService
                     return $item;
                 });
             $categoryList = Collection::make($categoryList)->toArray();
-            return ['count' => count($categoryList), 'list' => arrayKeyTrans($categoryList, 'hump')];
+            return [
+                'count' => count($categoryList),
+                'list' => arrayKeyTrans($categoryList, 'hump')
+            ];
         } else {
             return ['count' => 0, 'list' => []];
         }
@@ -207,8 +210,6 @@ class ArticleServiceImpl implements ArticleService
                 'sub_message' => $data['subMessage'],
                 'is_encrypt' => $data['isEncrypt'],
             ];
-//            if(isset($data['category']['id']) && !empty($data['category']['id']))
-//                $common_part['category_id'] = $data['category']['id'];
 
             // publish使用
             if (isset($data['status'])) {

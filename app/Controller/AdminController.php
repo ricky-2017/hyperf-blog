@@ -32,9 +32,6 @@ class AdminController extends AbstractController
 //        return jsonSuccess();
 //    }
 
-
-
-
     public function login(Request $request,Admin $adminModel,Jwt $jwt)
     {
         $username = $request->post('username');

@@ -2,8 +2,6 @@
 
 namespace App\Controller\Admin;
 
-
-
 use App\Constants\ReturnCode;
 use App\Controller\AbstractController;
 use App\Model\Tag;
@@ -15,14 +13,14 @@ class TagController extends AbstractController
     {
         $tagId = $this->request->query('tagId');
         $field = ['id', 'name', 'article_count as articleCount'];
-        $data = Tag::query()->where('id','=',$tagId)->select($field)->get();
+        $data = Tag::query()->where('id', '=', $tagId)->select($field)->get();
 
-        return jsonSuccess('success',$data);
+        return jsonSuccess('success', $data);
     }
 
     function tagList()
     {
-        $pageSize = $this->request->query('pageSize',10);
+        $pageSize = $this->request->query('pageSize', 10);
         $field = [
             'article_count as articleCount',
             'create_time as createTime',
@@ -35,13 +33,13 @@ class TagController extends AbstractController
         $data = Tag::query()->select($field)->paginate($pageSize);
 
         $return = [
-          'count' => $data->total(),
-          'list'  => $data->items(),
-          'page'  => $data->currentPage(),
-          'pageSize' => $data->perPage(),
+            'count' => $data->total(),
+            'list' => $data->items(),
+            'page' => $data->currentPage(),
+            'pageSize' => $data->perPage(),
         ];
 
-        return jsonSuccess('success',$return);
+        return jsonSuccess('success', $return);
     }
 
     function addTag()
@@ -61,7 +59,7 @@ class TagController extends AbstractController
         $tagId = $this->request->post('tagId');
         $tagName = $this->request->post('tagName');
 
-        Tag::query()->where('id','=',$tagId)->update(['name'=>$tagName]);
+        Tag::query()->where('id', '=', $tagId)->update(['name' => $tagName]);
 
         return jsonSuccess();
     }
@@ -69,17 +67,16 @@ class TagController extends AbstractController
     function delTag()
     {
         $tagId = $this->request->post('tagId');
-        try{
+        try {
             DB::beginTransaction();
 
-            DB::table('tag')->where('id','=',$tagId)->delete();
-            DB::table('article_tag_mapper')->where('tag_id','=',$tagId)->delete();
+            DB::table('tag')->where('id', '=', $tagId)->delete();
+            DB::table('article_tag_mapper')->where('tag_id', '=', $tagId)->delete();
 
             DB::commit();
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
-            bizException(ReturnCode::DB_OPERATION_ERROR);
+            bizException(ReturnCode::UNDEFINED);
         }
 
         return jsonSuccess();

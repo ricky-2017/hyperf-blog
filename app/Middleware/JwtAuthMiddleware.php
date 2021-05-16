@@ -9,6 +9,7 @@
 namespace App\Middleware;
 
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
+use Hyperf\Utils\Context;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -50,8 +51,7 @@ class JwtAuthMiddleware implements MiddlewareInterface
         if ($isValidToken) {
             // 注入用户ID
             $tokenBody = $this->jwt->getParserData($token);
-            $request->user_id = $tokenBody['user_id'];
-
+            Context::set('user_id',$tokenBody['user_id']);
             return $handler->handle($request);
         }
 

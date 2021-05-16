@@ -13,7 +13,7 @@ use App\Dto\CommentDto;
 
 interface ArticleService
 {
-    function list($search = [], $page, $pageSize);
+    function list($page, $pageSize, $search = []);
 
     function archivesList($search = [], $page, $pageSize);
 
