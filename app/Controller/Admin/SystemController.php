@@ -22,33 +22,33 @@ class SystemController extends AbstractController
 
 
         $return = [
-            'page'      => $data->currentPage(),
-            'pageSize'  => $pageSize,
-            'count'     => $data->total(),
-            'list'      => $data->items(),
+            'page' => $data->currentPage(),
+            'pageSize' => $pageSize,
+            'count' => $data->total(),
+            'list' => $data->items(),
         ];
-        return jsonSuccess('success',$return);
+        return jsonSuccess('success', $return);
     }
 
     function getHomeStatistics()
     {
-        $publish_count = DB::table('article')->where('status',0)->count();
-        $drafts_count = DB::table('article')->where('status',2)->count();
-        $deleted_count = DB::table('article')->where('status',1)->count();
+        $publish_count = DB::table('article')->where('status', 0)->count();
+        $drafts_count = DB::table('article')->where('status', 2)->count();
+        $deleted_count = DB::table('article')->where('status', 1)->count();
         $category_count = DB::table('category')->count();
         $tag_count = DB::table('tag')->count();
         $comments_count = DB::table('comments')->count();
 
 
         $result = array(
-            'publishCount'=> $publish_count,
-            'draftsCount'=> $drafts_count,
-            'deletedCount'=> $deleted_count,
-            'categoryCount'=> $category_count,
-            'tagCount'=> $tag_count,
-            'commentsCount'=> $comments_count
+            'publishCount' => $publish_count,
+            'draftsCount' => $drafts_count,
+            'deletedCount' => $deleted_count,
+            'categoryCount' => $category_count,
+            'tagCount' => $tag_count,
+            'commentsCount' => $comments_count
         );
 
-        return jsonSuccess('success',$result);
+        return jsonSuccess('success', $result);
     }
 }

@@ -8,7 +8,6 @@
 
 namespace App\Model;
 
-
 use App\Constants\ReturnCode;
 use Hyperf\DbConnection\Db;
 

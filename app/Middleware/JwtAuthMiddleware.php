@@ -51,7 +51,7 @@ class JwtAuthMiddleware implements MiddlewareInterface
         if ($isValidToken) {
             // 注入用户ID
             $tokenBody = $this->jwt->getParserData($token);
-            Context::set('user_id',$tokenBody['user_id']);
+            Context::set('user_id', $tokenBody['user_id']);
             return $handler->handle($request);
         }
 

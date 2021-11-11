@@ -113,6 +113,12 @@ Router::addGroup('/a/',function() {
 //});
 }, ['middleware' => [App\Middleware\JwtAuthMiddleware::class]]);
 
+// 管理后台登录
+Router::addGroup('/',function() {
+    Router::post('system/login', 'App\Controller\System\AuthController@login');
+
+});
+
 
 
 
