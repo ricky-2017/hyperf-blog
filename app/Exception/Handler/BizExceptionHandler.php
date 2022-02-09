@@ -38,23 +38,27 @@ class BizExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
-        $this->logger->debug($this->formatter->format($throwable));
+        if ($throwable instanceof BizException) {
+            $this->logger->debug($this->formatter->format($throwable));
 
-        $this->stopPropagation();
-//        Db::rollBack();
-        $body = [
-            'code'        => $throwable->getCode(),
-            'data'        => $throwable->getData(),
-            'message'     => $throwable->getMessage()
-        ];
+            $this->stopPropagation();
 
-        return $response->withHeader('Server', 'Hyperf')->withStatus(200)->withBody(new SwooleStream(json_encode($body)));
+            $body = [
+                'code' => $throwable->getCode(),
+                'data' => $throwable->getData(),
+                'message' => $throwable->getMessage(),
+            ];
 
+            return $response->withHeader('Content-Type', 'application/json')
+                ->withStatus(200)
+                ->withBody(new SwooleStream(json_encode($body, JSON_UNESCAPED_UNICODE)));
+        }
+        return $response;
     }
 
     public function isValid(Throwable $throwable): bool
     {
-        return $throwable instanceof BizException;
+        return true;
     }
 
 }

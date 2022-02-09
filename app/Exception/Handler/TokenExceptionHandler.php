@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Exception\Handler;
 
 use App\Constants\ReturnCode;
@@ -33,19 +34,18 @@ class TokenExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
-        if($throwable instanceof TokenValidException)
-        {
+        if ($throwable instanceof TokenValidException) {
             $this->stopPropagation();
 
             $body = [
-                'code'        => ReturnCode::ACCESS_TOKEN_EXPIRE[0],
-                'data'        => [],
-                'message'     => ReturnCode::ACCESS_TOKEN_EXPIRE[1]
+                'code' => ReturnCode::ACCESS_TOKEN_EXPIRE[0],
+                'data' => [],
+                'message' => ReturnCode::ACCESS_TOKEN_EXPIRE[1]
             ];
-
+            $this->logger->debug(json_encode($body));
             return $response->withHeader('Server', 'Hyperf')->withStatus(200)->withBody(new SwooleStream(json_encode($body)));
         }
-
+        return $response;
     }
 
     public function isValid(Throwable $throwable): bool

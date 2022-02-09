@@ -1,37 +1,22 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Kepler
- * Date: 2020/8/24
- * Time: 23:10
+ * User: rubio
+ * Date: 2021/11/10
+ * Time: 16:19
  */
 
-namespace App\Controller;
+namespace App\Controller\System;
+
 
 use App\Constants\ReturnCode;
+use App\Controller\AbstractController;
 use App\Model\Admin;
 use Hyperf\HttpServer\Request;
 use Phper666\JwtAuth\Jwt;
 
-class AdminController extends AbstractController
+class AuthController extends AbstractController
 {
-//    /**
-//     * 创建管理员账号
-//     */
-//    public function create(Request $request)
-//    {
-//        $params = $request->post();
-//
-//        if (empty($params['username']) || empty($params['password']) || strlen($params['password']) < 6) {
-//            bizException(ReturnCode::INVALID_PARAM);
-//
-//        }
-//
-//        $result = $this->admin->register($data['username'], $data['password']);
-//
-//        return jsonSuccess();
-//    }
-
     public function login(Request $request, Admin $adminModel, Jwt $jwt)
     {
         $username = $request->post('username');

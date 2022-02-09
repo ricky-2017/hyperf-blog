@@ -13,7 +13,7 @@ use Hyperf\DbConnection\Db;
 
 class Admin extends Model
 {
-    protected $table ='admin';
+    protected $table = 'admin';
 
 //    public function register($username, $password)
 //    {
@@ -63,14 +63,18 @@ class Admin extends Model
     public function checkPassword($username, $password)
     {
         // 检查用户名是否存在
-        $adminInfo = Db::table('admin')->where('username', $username)->where('status',0)->first();
+        $adminInfo = Db::table('admin')->where('username', $username)->where('status', 0)->first();
 
-        if (!cb_passwordEqual($adminInfo->password, $adminInfo->salt, $password))
-            bizException(ReturnCode::DATA_CONSTRAINT_ERROR,'用户不存在');
+        if (!cb_passwordEqual($adminInfo->password, $adminInfo->salt, $password)) {
 
-        return [
-            'user_id'   => $adminInfo->user_id,
-            'username' => $adminInfo->username
-        ];
+            bizException(ReturnCode::DATA_CONSTRAINT_ERROR, '用户不存在');
+        } else {
+
+            return [
+                'user_id' => $adminInfo->user_id,
+                'username' => $adminInfo->username
+            ];
+        }
+
     }
 }
