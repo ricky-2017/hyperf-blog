@@ -21,39 +21,39 @@ class IndexController extends AbstractController
     public function index(Request $request, ArticleService $articleService)
     {
         $result = $articleService->list($request->query('page'), $request->query('pageSize'), $request->query());
-        return jsonSuccess('', $result);
+        return jsonSuccess( $result);
     }
 
     public function getArticleArchives(Request $request, ArticleService $articleService)
     {
         $result = $articleService->archivesList($request->query(), $request->query('page'), $request->query('pageSize'));
-        return jsonSuccess('success', $result);
+        return jsonSuccess($result);
     }
 
     // tags
     public function tagList(ArticleService $articleService)
     {
-        return jsonSuccess('success', $articleService->tags());
+        return jsonSuccess($articleService->tags());
     }
 
     // category
     public function categoryList(ArticleService $articleService)
     {
-        return jsonSuccess('success', $articleService->categories());
+        return jsonSuccess($articleService->categories());
     }
 
     public function getArticle(Request $request, ArticleService $articleService)
     {
-        return jsonSuccess('success', $articleService->getArticle($request->query('id')));
+        return jsonSuccess($articleService->getArticle($request->query('id')));
     }
 
     public function addComment(CommentDto $commentDto, ArticleService $articleService)
     {
-        return jsonSuccess('success', $articleService->addComment($commentDto));
+        return jsonSuccess($articleService->addComment($commentDto));
     }
 
     public function getComment(Request $request, ArticleService $articleService)
     {
-        return jsonSuccess('success', $articleService->getComment($request->query('articleId')));
+        return jsonSuccess($articleService->getComment($request->query('articleId')));
     }
 }

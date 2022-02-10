@@ -6,7 +6,7 @@
  * Time: 15:17
  */
 
-namespace app\Model\system;
+namespace App\Model\System;
 
 
 use App\Model\Model;

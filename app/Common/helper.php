@@ -16,9 +16,9 @@
  * @throws \app\common\exception\BizException 业务异常
  *
  */
-if(!function_exists('bizException'))
-{
-    function bizException(array $code, $message = "", $data = [], Throwable $previous = null) {
+if (!function_exists('bizException')) {
+    function bizException(array $code, $message = "", $data = [], Throwable $previous = null)
+    {
         throw new \App\Exception\BizException($code, $message, $data, $previous);
     }
 }
@@ -30,9 +30,9 @@ if(!function_exists('bizException'))
  * @param string $msg
  */
 
-if(!function_exists('jsonReturnCode'))
-{
-    function jsonReturnCode(array $code = \App\Constants\ReturnCode::UNDEFINED, $data = [], $msg = '') {
+if (!function_exists('jsonReturnCode')) {
+    function jsonReturnCode(array $code = \App\Constants\ReturnCode::UNDEFINED, $data = [], $msg = '')
+    {
         $return_data = [
             'code' => $code[0],
             'msg' => empty($msg) ? $code[1] : $msg,
@@ -51,13 +51,12 @@ if(!function_exists('jsonReturnCode'))
  * @param string $msg
  * @return string
  */
-if(!function_exists('jsonSuccess'))
-{
-    function jsonSuccess($msg='', $data=[]) {
+if (!function_exists('jsonSuccess')) {
+    function jsonSuccess($data = [], $msg = '')
+    {
         return jsonReturnCode(\App\Constants\ReturnCode::SUCCESS, $data, $msg);
     }
 }
-
 
 
 /**
@@ -67,7 +66,7 @@ if(!function_exists('jsonSuccess'))
  * @param string $type 返回下标字符串格式，可选范围 hump、underline
  * @return array 格式化后的数组
  */
-if (!function_exists('arrayKeyTrans')){
+if (!function_exists('arrayKeyTrans')) {
     function arrayKeyTrans($data = [], $type = 'hump')
     {
         $fun = 'hump' == $type ? 'lineToHump' : 'humpToLine';
@@ -76,8 +75,7 @@ if (!function_exists('arrayKeyTrans')){
         foreach ($data as $key => $val) {
 
             // 递归全部改变
-            if(is_array($val))
-            {
+            if (is_array($val)) {
                 $val = arrayKeyTrans($val, $type);
             }
 
@@ -126,13 +124,13 @@ if (!function_exists('humpToLine')) {
 /**
  * 明文密码哈希
  *
- * @param  string $password         明文密码
+ * @param  string $password 明文密码
  * @return array  password和salt
  */
 
-if (!function_exists('cb_encrypt'))
-{
-    function cb_encrypt($password) {
+if (!function_exists('cb_encrypt')) {
+    function cb_encrypt($password)
+    {
         $salt = password_hash('mypassword', PASSWORD_BCRYPT, ['cost' => 10]);
         $password = md5($password . $salt);
         return [
@@ -145,14 +143,14 @@ if (!function_exists('cb_encrypt'))
 /**
  * 密码比对
  *
- * @param  string $hash          哈希值
- * @param  string $salt          盐
- * @param  string $password      明文密码
+ * @param  string $hash 哈希值
+ * @param  string $salt 盐
+ * @param  string $password 明文密码
  * @return void   一致为真
  */
-if (!function_exists('cb_passwordEqual'))
-{
-    function cb_passwordEqual($hash, $salt, $password) {
+if (!function_exists('cb_passwordEqual')) {
+    function cb_passwordEqual($hash, $salt, $password)
+    {
         $new_hash = md5($password . $salt);
         if (hash_equals($hash, $new_hash)) {
             return true;
@@ -166,9 +164,9 @@ if (!function_exists('cb_passwordEqual'))
  * @method create_id
  * @return [type]    [description]
  */
-if (!function_exists('create_id'))
-{
-    function create_id() {
+if (!function_exists('create_id')) {
+    function create_id()
+    {
         return decTo63(base_convert(md5(uniqid()), 16, 10));
     }
 }
@@ -221,8 +219,7 @@ if (!function_exists('decTo63')) {
     }
 }
 
-if( !function_exists('trim_left_zeros'))
-{
+if (!function_exists('trim_left_zeros')) {
     function trim_left_zeros($str)
     {
         $str = ltrim($str, '0');
@@ -233,14 +230,13 @@ if( !function_exists('trim_left_zeros'))
     }
 }
 
-if ( !function_exists('parse_name'))
-{
+if (!function_exists('parse_name')) {
     /**
      * 字符串命名风格转换
      * type 0 将Java风格转换为C的风格 1 将C风格转换为Java的风格
-     * @param string  $name 字符串
+     * @param string $name 字符串
      * @param integer $type 转换类型
-     * @param bool    $ucfirst 首字母是否大写（驼峰规则）
+     * @param bool $ucfirst 首字母是否大写（驼峰规则）
      * @return string
      */
     function parse_name($name, $type = 0, $ucfirst = true)

@@ -15,7 +15,7 @@ class TagController extends AbstractController
         $field = ['id', 'name', 'article_count as articleCount'];
         $data = Tag::query()->where('id', '=', $tagId)->select($field)->get();
 
-        return jsonSuccess('success', $data);
+        return jsonSuccess($data);
     }
 
     function tagList()
@@ -39,7 +39,7 @@ class TagController extends AbstractController
             'pageSize' => $data->perPage(),
         ];
 
-        return jsonSuccess('success', $return);
+        return jsonSuccess($return);
     }
 
     function addTag()

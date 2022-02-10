@@ -57,7 +57,7 @@ class AdminController extends AbstractController
                     'exp' => 7200
                 )
             );
-            return jsonSuccess('登录成功', $userResult);
+            return jsonSuccess($userResult);
         } else {
             bizException(ReturnCode::DATA_CONSTRAINT_ERROR, '登录失败');
         }

@@ -27,7 +27,7 @@ class SystemController extends AbstractController
             'count' => $data->total(),
             'list' => $data->items(),
         ];
-        return jsonSuccess('success', $return);
+        return jsonSuccess($return);
     }
 
     function getHomeStatistics()
@@ -49,6 +49,6 @@ class SystemController extends AbstractController
             'commentsCount' => $comments_count
         );
 
-        return jsonSuccess('success', $result);
+        return jsonSuccess($result);
     }
 }

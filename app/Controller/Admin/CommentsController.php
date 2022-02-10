@@ -19,7 +19,7 @@ class CommentsController extends AbstractController
     {
         $articleId = $this->request->query('articleId');
         $data = $comments->getComments($articleId);
-        return jsonSuccess('',
+        return jsonSuccess(
             [
                 'count' => count($data),
                 'list' => $data
@@ -49,7 +49,7 @@ class CommentsController extends AbstractController
             'pageSize' => $data->perPage(),
         ];
 
-        return jsonSuccess('', $return);
+        return jsonSuccess($return);
     }
 
     function delete()

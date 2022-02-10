@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model\system;
+namespace App\Model\System;
 
 
 use App\Model\Model;
@@ -10,7 +10,7 @@ class Role extends Model
 {
     protected $table = 'sys_role';
     protected $primaryKey = 'role_id';
-    protected $readonly = ['role_id', 'role_create_time'];
+
     const CREATED_AT = 'role_create_time';
     const UPDATED_AT = 'role_update_time';
 
@@ -31,9 +31,9 @@ class Role extends Model
         Db::commit();
     }
 
-    function getRoleRulesAttr($value, $data)
+    function getRoleRulesAttribute($value)
     {
-        $rs = RoleRule::with('rule')->where('role_id', $data['role_id'])->select();
+        $rs = RoleRule::with('rule')->where('role_id', $this->role_id)->select();
         $roleRules = array();
         foreach ($rs as $k => $v) {
             $roleRules[$k] = $v['rule']->toArray();

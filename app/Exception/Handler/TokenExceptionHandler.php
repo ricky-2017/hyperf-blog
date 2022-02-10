@@ -43,7 +43,10 @@ class TokenExceptionHandler extends ExceptionHandler
                 'message' => ReturnCode::ACCESS_TOKEN_EXPIRE[1]
             ];
             $this->logger->debug(json_encode($body));
-            return $response->withHeader('Server', 'Hyperf')->withStatus(200)->withBody(new SwooleStream(json_encode($body)));
+
+            return $response->withHeader('Content-Type', 'application/json')
+                ->withStatus(200)
+                ->withBody(new SwooleStream(json_encode($body, JSON_UNESCAPED_UNICODE)));
         }
         return $response;
     }

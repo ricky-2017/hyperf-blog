@@ -66,4 +66,54 @@ class BaseDto
     {
         return self::fromRequest();
     }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->arrayData[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->arrayData[$offset];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->arrayData[$offset] = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->arrayData[$offset]);
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->arrayData);
+    }
+
+    public function keys()
+    {
+        return array_keys($this->arrayData);
+    }
+
+    public function values()
+    {
+        return array_values($this->arrayData);
+    }
+
+    public function has($key)
+    {
+        return array_key_exists($key, $this->arrayData);
+    }
+
+    public function toJson($options = JSON_UNESCAPED_UNICODE)
+    {
+        return json_encode($this->arrayData, $options);
+    }
+
+    public function __toString()
+    {
+        return $this->toJson();
+    }
 }

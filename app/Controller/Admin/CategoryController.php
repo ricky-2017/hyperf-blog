@@ -22,7 +22,7 @@ class CategoryController extends AbstractController
 
         $data = Category::query()->where('id','=',$categoryId)->select($field)->get();
 
-        return jsonSuccess('success',$data);
+        return jsonSuccess($data);
     }
 
     function list()
@@ -49,7 +49,7 @@ class CategoryController extends AbstractController
             'pageSize'  => $data->perPage(),
         ];
 
-        return jsonSuccess('success',$return);
+        return jsonSuccess($return);
     }
 
     function add()

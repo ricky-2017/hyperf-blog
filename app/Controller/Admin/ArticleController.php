@@ -30,7 +30,7 @@ class ArticleController extends AbstractController
             'tags' => $article_info['tags'],
         ];
 
-        return jsonSuccess('success', arrayKeyTrans($result, 'hump'));
+        return jsonSuccess(arrayKeyTrans($result, 'hump'));
     }
 
     function getArticleList(ArticleService $articleService)
@@ -40,7 +40,7 @@ class ArticleController extends AbstractController
         $search = $this->request->all();
 
         $result = $articleService->list($page, $pageSize, $search);
-        return jsonSuccess('success', $result);
+        return jsonSuccess($result);
     }
 
     function delete()
@@ -57,7 +57,7 @@ class ArticleController extends AbstractController
 
         $article_id = $articleService->saveArticle($data);
 
-        return jsonSuccess('success', $article_id);
+        return jsonSuccess($article_id);
     }
 
     function publish(ArticleService $articleService)
@@ -68,7 +68,7 @@ class ArticleController extends AbstractController
 
         $article_id = $articleService->saveArticle($data);
 
-        return jsonSuccess('success', $article_id);
+        return jsonSuccess($article_id);
     }
 
     function save(ArticleService $articleService)
@@ -77,7 +77,7 @@ class ArticleController extends AbstractController
 
         $article_id = $articleService->saveArticle($data);
 
-        return jsonSuccess('success', $article_id);
+        return jsonSuccess($article_id);
     }
 
 

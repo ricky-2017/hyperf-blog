@@ -24,8 +24,8 @@ class CorsMiddleware implements MiddlewareInterface
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE")
             // Headers 可以根据实际情况进行改写。
-//            ->withHeader('Access-Control-Allow-Headers', 'DNT,Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization,accesstoken');
-            ->withHeader('Access-Control-Allow-Headers', '*');
+            ->withHeader('Access-Control-Allow-Headers', 'DNT,Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization,accesstoken');
+//            ->withHeader('Access-Control-Allow-Headers', '*');
 
         Context::set(ResponseInterface::class, $response);
 
@@ -37,3 +37,4 @@ class CorsMiddleware implements MiddlewareInterface
     }
 
 }
+

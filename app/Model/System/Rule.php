@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Model\system;
+namespace App\Model\System;
 
 
 use App\Model\Model;
@@ -14,10 +14,10 @@ class Rule extends Model
     const CREATED_AT = 'rule_create_time';
     const UPDATED_AT = 'rule_update_time';
 
-    public function searchRuleGroupAttr($query, $value, $data)
-    {
-        $query->where('rule_group', is_array($value) ? 'in' : 'eq', $value);
-    }
+//    public function searchRuleGroupAttr($query, $value, $data)
+//    {
+//        $query->where('rule_group', is_array($value) ? 'in' : 'eq', $value);
+//    }
 
     /**
      * 权限集关联权限
@@ -47,9 +47,9 @@ class Rule extends Model
         Db::commit();
     }
 
-    function getRuleResourcesAttr($value, $data)
+    function getRuleResourcesAttribute($value)
     {
-        $list = RuleResource::with('resource')->where('rule_id', $data['rule_id'])->select()->toArray();
+        $list = RuleResource::with('resource')->where('rule_id', $this->rule_id)->select()->toArray();
 
         $ruleResources = array();
         if (!empty($list)) {

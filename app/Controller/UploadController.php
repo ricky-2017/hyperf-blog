@@ -29,7 +29,7 @@ class UploadController extends AbstractController
         $token = $auth->uploadToken($bucket);
         $data = $token;
 //        $data = '七牛accessKey:'.$token;
-        return jsonSuccess('success',['token'=>$data]);
+        return jsonSuccess(['token'=>$data]);
     }
 
     // 文件存储
@@ -49,8 +49,8 @@ class UploadController extends AbstractController
 
         $config = config('file.storage.qiniu');
         $cdn_route = $config['prefix'];
-        return jsonSuccess('success',['imgUrl' => $cdn_route.$savePath]);
-//        return jsonSuccess('success',['imgUrl' => env('DOMAIN','http://swooleapi.lubiao9.cn').$savePath]);
+        return jsonSuccess(['imgUrl' => $cdn_route.$savePath]);
+//        return jsonSuccess(['imgUrl' => env('DOMAIN','http://swooleapi.lubiao9.cn').$savePath]);
     }
 
     public function upToQiniu(Request $request,FilesystemFactory $factory)
@@ -70,6 +70,6 @@ class UploadController extends AbstractController
         fclose($stream);
 
         $cdn_route = $config['prefix'];
-        return jsonSuccess('success',['imgUrl' => $cdn_route.$savePath]);
+        return jsonSuccess(['imgUrl' => $cdn_route.$savePath]);
     }
 }

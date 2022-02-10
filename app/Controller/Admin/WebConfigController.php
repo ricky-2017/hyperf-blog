@@ -14,7 +14,7 @@ class WebConfigController extends AbstractController
 
         $data['hadOldPassword'] = (empty($data['salt'])) ? false : true;
         unset($data['salt']);
-        return jsonSuccess('',$data);
+        return jsonSuccess($data);
 
     }
 
@@ -49,7 +49,7 @@ class WebConfigController extends AbstractController
             ->where('type','=', 'about')
             ->first();
 
-        return jsonSuccess('',$config);
+        return jsonSuccess($config);
     }
 
     function modifyAbout()
@@ -67,7 +67,7 @@ class WebConfigController extends AbstractController
             DB::table('pages')->insert(array('md'=> $content, 'html'=> $htmlContent, 'type'=> 'about'));
         }
 
-        return jsonSuccess('更新成功');
+        return jsonSuccess();
     }
 
     function getResume()
@@ -77,7 +77,7 @@ class WebConfigController extends AbstractController
             ->where('type','=', 'resume')
             ->first();
 
-        return jsonSuccess('',$config);
+        return jsonSuccess($config);
     }
 
     function modifyResume()
@@ -95,6 +95,6 @@ class WebConfigController extends AbstractController
             DB::table('pages')->insert(array('md'=> $content, 'html'=> $htmlContent, 'type'=> 'resume'));
         }
 
-        return jsonSuccess('更新成功');
+        return jsonSuccess();
     }
 }

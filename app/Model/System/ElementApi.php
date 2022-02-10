@@ -6,13 +6,15 @@
  * Time: 18:09
  */
 
-namespace app\Model\system;
+namespace App\Model\System;
 
 
-class ElementApi extends BaseModel
+use App\Model\Model;
+
+class ElementApi extends Model
 {
     protected $table = 'sys_element_api';
-    protected $pk = "api_id";
+    protected $primaryKey = "api_id";
 
 
 }
