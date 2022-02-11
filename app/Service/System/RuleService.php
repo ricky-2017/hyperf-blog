@@ -8,7 +8,7 @@
 
 namespace App\Service\System;
 
-use app\system\dto\RuleReq;
+use App\Dto\System\RuleReq;
 use App\Dto\PagingReq;
 
 interface RuleService

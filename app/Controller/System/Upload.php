@@ -3,7 +3,7 @@
 namespace App\Controller\System;
 
 use App\Controller\System\BaseController;
-use app\system\dto\UploadReq;
+use App\Dto\System\UploadReq;
 use App\Service\System\UploadService;
 
 class Upload extends BaseController

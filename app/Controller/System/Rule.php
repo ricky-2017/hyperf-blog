@@ -3,7 +3,7 @@
 namespace App\Controller\System;
 
 use App\Controller\System\AuthController;
-use app\system\dto\RuleReq;
+use App\Dto\System\RuleReq;
 use App\Service\System\RuleService;
 use App\Dto\PagingReq;
 
@@ -18,9 +18,9 @@ class Rule extends AuthController
         parent::__construct();
     }
 
-    public function lists(PagingReq $paging, RuleReq $search)
+    public function lists()
     {
-        return jsonSuccess($this->service->lists($paging, $search));
+        return jsonSuccess($this->service->lists(PagingReq::fromRequest(), RuleReq::fromRequest()));
     }
 
     public function get()
@@ -30,14 +30,14 @@ class Rule extends AuthController
         return jsonSuccess($rule);
     }
 
-    public function post(RuleReq $req)
+    public function post()
     {
-        return jsonSuccess($this->service->post($req));
+        return jsonSuccess($this->service->post(RuleReq::fromRequest()));
     }
 
-    public function put(RuleReq $req)
+    public function put()
     {
-        return jsonSuccess($this->service->put($this->request->query('id'), $req));
+        return jsonSuccess($this->service->put($this->request->query('id'), RuleReq::fromRequest()));
     }
 
     public function delete()

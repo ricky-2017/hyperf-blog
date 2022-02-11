@@ -14,7 +14,7 @@ use App\Dto\PagingReq;
 use App\Model\System\Role;
 use App\Model\System\User;
 use App\Service\System\UserService;
-use app\system\dto\UserReq;
+use App\Dto\System\UserReq;
 use Phper666\JwtAuth\Jwt;
 
 class UserServiceImpl implements UserService

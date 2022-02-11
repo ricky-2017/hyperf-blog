@@ -13,7 +13,7 @@ use App\Constants\ReturnCode;
 use App\Dto\PagingReq;
 use App\Model\System\Role;
 use App\Service\System\RoleService;
-use app\system\dto\RoleReq;
+use App\Dto\System\RoleReq;
 
 class RoleServiceImpl implements RoleService
 {
@@ -32,33 +32,47 @@ class RoleServiceImpl implements RoleService
         $this->role = $role;
     }
 
-
     function lists(PagingReq $paging, RoleReq $search)
     {
-
         $query = $this->role->orderby('role_id');
 
-//        $searchKeys = $search->keys();
-//        $searchValues = $search->toArray();
-//        if (!empty($search)) {
-//            $query->withSearch($searchKeys, $searchValues);
-//        }
+        if (!empty($search->getName())) {
+            $query->where('role_name', 'like', '%' . urldecode($search->getName()) . '%');
+        }
+
+        if (!empty($search->getGroup())) {
+            if (is_array($search->getGroup())) {
+                $query->whereIn('role_group', $search->getGroup());
+            } else {
+                $query->where('role_group', '=', $search->getGroup());
+            }
+        }
+
         if ($search->getStatus()) {
             $query->where('role_status', $search->getStatus());
         }
 
-        return $query->paginate();
+        $data = $query->paginate();
+
+        return array(
+            'page' => $data->currentPage(),
+            'pageSize' => $data->perPage(),
+            'count' => $data->total(),
+            'data' => $data->items()
+        );
     }
 
     function get($id)
     {
         $data = $this->role->find($id);
 
+        $data->append(['role_rules']);
+
         if (empty($data)) {
             bizException(ReturnCode::REQUESTED_RESOURCE_NOT_FOUND);
         }
 
-        return $data->append(['role_rules']);
+        return $data;
     }
 
 
@@ -80,9 +94,7 @@ class RoleServiceImpl implements RoleService
         if ($role) {
             bizException(ReturnCode::DUPLICATE_DATA_NOT_ALLOW, "角色已存在");
         }
-
-        $this->role->save($req->toArray());
-        return $this->role;
+        return Role::create($req->toArray());
     }
 
     function put($id, RoleReq $req)
@@ -122,8 +134,8 @@ class RoleServiceImpl implements RoleService
     function putStatus($id)
     {
         $role = $this->role->find($id);
-        $role->save(['role_status' => !$role['role_status']]);
-        return $this->role;
+        $role->role_status = ($role['role_status'] == 1) ? 0 : 1;
+        return $role->save();
     }
 
     function putRules($id, $ruleIds)

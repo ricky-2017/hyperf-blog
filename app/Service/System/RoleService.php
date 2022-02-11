@@ -8,12 +8,11 @@
 
 namespace App\Service\System;
 
-use app\system\dto\RoleReq;
+use App\Dto\System\RoleReq;
 use App\Dto\PagingReq;
 
 interface RoleService
 {
-
     function lists(PagingReq $paging, RoleReq $search);
 
     function get($id);
@@ -27,4 +26,5 @@ interface RoleService
     function putStatus($id);
 
     function putRules($id, $ruleIds);
+
 }

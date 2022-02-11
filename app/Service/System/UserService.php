@@ -8,7 +8,7 @@
 
 namespace App\Service\System;
 
-use app\system\dto\UserReq;
+use App\Dto\System\UserReq;
 use App\Dto\PagingReq;
 
 interface UserService

@@ -11,7 +11,7 @@ class User extends Model
     protected $table = 'sys_user';
     protected $primaryKey = 'user_id';
     protected $hidden = ['user_password', 'user_token_version'];
-//    protected $readonly = ['user_id', 'user_create_time'];
+    protected $guarded = ['user_id', 'user_create_time'];
     const CREATED_AT = 'user_create_time';
     const UPDATED_AT = 'user_update_time';
 

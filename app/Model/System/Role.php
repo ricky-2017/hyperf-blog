@@ -3,6 +3,7 @@
 namespace App\Model\System;
 
 
+use App\Constants\ReturnCode;
 use App\Model\Model;
 use Hyperf\DbConnection\Db;
 
@@ -11,46 +12,48 @@ class Role extends Model
     protected $table = 'sys_role';
     protected $primaryKey = 'role_id';
 
+    protected $guarded = ['role_id', 'role_create_time'];
+
     const CREATED_AT = 'role_create_time';
     const UPDATED_AT = 'role_update_time';
 
     function replaceRoleRules($id, $ruleIds)
     {
         $roleInfo = $this->find($id);
-        Db::beginTransaction();
-        RoleRule::where('role_id', $id)
-            ->delete();
-        RoleRule::create(array_map(function ($v) use ($id, $roleInfo) {
-            return [
-                'role_rule_group' => $roleInfo['role_group'],
-                'role_id' => $id,
-                'rule_id' => $v,
-            ];
-        }, $ruleIds));
+        try {
+            Db::beginTransaction();
+            RoleRule::where('role_id', $id)
+                ->delete();
 
-        Db::commit();
+            if (!empty($ruleIds)) {
+                foreach ($ruleIds as $rule_id) {
+                    RoleRule::create([
+                        'role_rule_group' => $roleInfo['role_group'],
+                        'role_id' => $id,
+                        'rule_id' => $rule_id,
+                    ]);
+                }
+            }
+            Db::commit();
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED);
+        }
     }
 
     function getRoleRulesAttribute($value)
     {
-        $rs = RoleRule::with('rule')->where('role_id', $this->role_id)->select();
+        $rs = RoleRule::with('rule')->where('role_id', $this->role_id)->get();
+
         $roleRules = array();
-        foreach ($rs as $k => $v) {
-            $roleRules[$k] = $v['rule']->toArray();
+        if (!empty($rs)) {
+            foreach ($rs->toArray() as $k => $v) {
+                $roleRules[$k] = $v['rule'];
+            }
         }
+
         return $roleRules;
     }
 
-    // 搜索器
-    public function searchRoleGroupAttr($query, $value, $data)
-    {
-        $query->where('role_group', is_array($value) ? 'in' : 'eq', $value);
-    }
 
-    public function searchRoleNameAttr($query, $value, $data)
-    {
-        if (!empty($value)) {
-            $query->where('role_name', 'like', '%' . urldecode($value) . '%');
-        }
-    }
 }

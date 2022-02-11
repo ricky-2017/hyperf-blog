@@ -13,7 +13,7 @@ use App\Constants\ReturnCode;
 use App\Dto\PagingReq;
 use App\Model\System\Rule;
 use App\Service\System\RuleService;
-use app\system\dto\RuleReq;
+use App\Dto\System\RuleReq;
 
 class RuleServiceImpl implements RuleService
 {

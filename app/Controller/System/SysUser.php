@@ -3,7 +3,7 @@
 namespace App\Controller\System;
 
 use App\Controller\System\AuthController;
-use app\system\dto\UserReq;
+use App\Dto\System\UserReq;
 use App\Service\System\UserService;
 use App\Dto\PagingReq;
 use Hyperf\Utils\Context;
@@ -18,9 +18,9 @@ class SysUser extends AuthController
         parent::__construct();
     }
 
-    public function lists(PagingReq $paging, UserReq $search)
+    public function lists()
     {
-        return jsonSuccess($this->service->lists($paging, $search));
+        return jsonSuccess($this->service->lists(PagingReq::fromRequest(), UserReq::fromRequest()));
     }
 
     public function get()

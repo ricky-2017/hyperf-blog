@@ -15,7 +15,7 @@ class RuleResource extends Model
 {
     protected $table = 'sys_rule_resource';
     protected $primaryKey = 'rule_resource_id';
-//    protected $readonly = ['rule_resource_id', 'rule_resource_create_time'];
+    protected $guarded = ['rule_resource_id', 'rule_resource_create_time'];
     const CREATED_AT = 'rule_resource_create_time';
     const UPDATED_AT = 'rule_resource_update_time';
 

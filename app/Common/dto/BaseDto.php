@@ -8,34 +8,52 @@
 
 namespace App\Common\dto;
 
-class BaseDto
+class BaseDto implements \ArrayAccess, \IteratorAggregate
 {
-    private $arrayData = [];
+    /**
+     * @var string 反序列化前缀
+     */
+    protected $prefix = '';
 
-    public static function fromRequest()
+    protected $arrayData = [];
+
+    /**
+     * @param string $name 参数名
+     * @param string $type 获取参数的方法
+     * @param string $prefix 反序列化前缀
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public static function fromRequest($name = ".", $type = "all", $prefix = '')
     {
-        $param = make('Hyperf\HttpServer\Request')->all();
+        $param = make('Hyperf\HttpServer\Request')->$type();
 
-//        if ($name !== ".") {
-//            if (empty($param[$name]) || !is_array($param[$name])) {
-//                return;
-//            }
-//
-//            $param = $param[$name];
-//        }
+        if ($name !== ".") {
+            if (empty($param[$name]) || !is_array($param[$name])) {
+                return;
+            }
 
-//        if (!is_array($param)) {
-//            return;
-//        }
+            $param = $param[$name];
+        }
+
+        if (!is_array($param)) {
+            return;
+        }
 
         // 静态延迟绑定
         $object = new static();
         // 反射获取类
         $class = new \ReflectionClass($object);
+        // 获取前缀
+        $prefix = $prefix ? $prefix : $object->prefix;
 
         foreach ($param as $key => $value) {
+            // 替换前缀
+            $count = 1;
+            $key = $prefix ? str_replace($prefix . "_", "", $key, $count) : $key;
             $parsedKey = parse_name($key, 1, false);
             $setterName = "set" . parse_name($key, 1, true);
+
             if (!method_exists($object, $setterName)) {
                 continue;
             };
@@ -43,7 +61,7 @@ class BaseDto
             $property = $class->getProperty($parsedKey);
             $doc = $property->getDocComment();
             preg_match('/@var\s*([^\s]*)/i', $doc, $matches);
-            if (is_array($matches) && count($matches) > 0 && class_exists($matches[0])) {
+            if (count($matches) > 0 && class_exists($matches[0])) {
                 $objectProperty = new $matches[0]();
                 if (method_exists($objectProperty, "fromRequest")) {
                     $value = $objectProperty::fromRequest($key . "/a");
@@ -51,7 +69,11 @@ class BaseDto
             }
 
             $object->$setterName($value);
-            $object->arrayData[$key] = $value;
+
+            $arrayKey = $prefix ? $prefix . "_" . "$key" : $key;
+
+//            $object->arrayData[$key] = $value;
+            $object->arrayData[$arrayKey] = $value;
         }
 
         return $object;
@@ -116,4 +138,5 @@ class BaseDto
     {
         return $this->toJson();
     }
+
 }

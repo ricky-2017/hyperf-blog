@@ -141,7 +141,7 @@ Router::addGroup('/system/', function () {
         Router::post('/delete', 'App\Controller\System\ElementController@delete');
     });
 
-    Router::addGroup('rule', function () {
+    Router::addGroup('rules', function () {
         Router::post('/putStatus', 'App\Controller\System\Rule@putStatus');
         Router::post('/putResources', 'App\Controller\System\Rule@putResources');
         Router::get('/lists', 'App\Controller\System\Rule@lists');

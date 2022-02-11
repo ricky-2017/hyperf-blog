@@ -10,7 +10,7 @@ class Rule extends Model
 {
     protected $table = 'sys_rule';
     protected $primaryKey = 'rule_id';
-//    protected $readonly = ['rule_id', 'rule_create_time'];
+    protected $guarded = ['rule_id', 'rule_create_time'];
     const CREATED_AT = 'rule_create_time';
     const UPDATED_AT = 'rule_update_time';
 
@@ -36,13 +36,13 @@ class Rule extends Model
             ->where('rule_id', $id)
             ->delete();
         RuleResource::create(array_map(function ($v) use ($id, $resourceType, $ruleInfo) {
-                return [
-                    'rule_resource_group' => $ruleInfo['rule_group'],
-                    'rule_id' => $id,
-                    'resource_id' => $v,
-                    'resource_type' => $resourceType,
-                ];
-            }, $resourceIds));
+            return [
+                'rule_resource_group' => $ruleInfo['rule_group'],
+                'rule_id' => $id,
+                'resource_id' => $v,
+                'resource_type' => $resourceType,
+            ];
+        }, $resourceIds));
 
         Db::commit();
     }

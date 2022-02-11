@@ -2,14 +2,12 @@
 
 namespace App\Controller\System;
 
-use App\Controller\System\AuthController;
-use app\system\dto\RoleReq;
+use App\Dto\System\RoleReq;
 use App\Service\System\RoleService;
 use App\Dto\PagingReq;
 
 class Role extends AuthController
 {
-
     private $service;
 
     public function __construct(RoleService $service)
@@ -18,38 +16,38 @@ class Role extends AuthController
         parent::__construct();
     }
 
-    public function lists(PagingReq $paging, RoleReq $search)
+    public function lists()
     {
-        return $this->service->lists($paging, $search);
+        return jsonSuccess($this->service->lists(PagingReq::fromRequest(), RoleReq::fromRequest()));
     }
 
     public function get()
     {
-        return $this->service->get($this->request->query('id'));
+        return jsonSuccess($this->service->get($this->request->query('id')));
     }
 
-    public function post(RoleReq $req)
+    public function post()
     {
-        return $this->service->post($req);
+        return jsonSuccess($this->service->post(RoleReq::fromRequest()));
     }
 
-    public function put(RoleReq $req)
+    public function put()
     {
-        return $this->service->put($this->request->query('id'), $req);
+        return jsonSuccess($this->service->put($this->request->input('id'), RoleReq::fromRequest()));
     }
 
     public function delete()
     {
-        return $this->service->delete($this->request->query('id'));
+        return jsonSuccess($this->service->delete($this->request->input('id')));
     }
 
     public function putStatus()
     {
-        return $this->service->putStatus($this->request->query('id'));
+        return jsonSuccess($this->service->putStatus($this->request->input('id')));
     }
 
-    public function putRules($rule_ids)
+    public function putRules()
     {
-        return $this->service->putRules($this->request->query('id'), $rule_ids);
+        return jsonSuccess($this->service->putRules($this->request->input('id'), $this->request->input('rule_ids')));
     }
 }

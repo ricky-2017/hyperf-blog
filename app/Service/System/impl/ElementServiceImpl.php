@@ -16,9 +16,9 @@ use App\Model\System\RoleRule;
 use App\Model\System\RuleResource;
 use App\Model\System\UserRole;
 use App\Service\System\ElementService;
-use app\system\dto\ElementApiReq;
-use app\system\dto\ElementReq;
-use app\system\dto\ElementSearchReq;
+use App\Dto\System\ElementApiReq;
+use App\Dto\System\ElementReq;
+use App\Dto\System\ElementSearchReq;
 use Hyperf\DbConnection\Db;
 
 class ElementServiceImpl implements ElementService

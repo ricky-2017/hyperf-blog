@@ -6,7 +6,7 @@
  * Time: 15:29
  */
 
-namespace app\system\dto;
+namespace App\Dto\System;
 
 use App\Common\dto\BaseDto;
 

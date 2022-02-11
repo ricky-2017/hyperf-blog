@@ -9,7 +9,7 @@
 namespace App\Service\System;
 
 
-use app\system\dto\UploadReq;
+use App\Dto\System\UploadReq;
 
 interface UploadService
 {

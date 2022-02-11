@@ -11,7 +11,7 @@ namespace App\Service\System\impl;
 
 use App\Constants\ReturnCode;
 use App\Service\System\UploadService;
-use app\system\dto\UploadReq;
+use App\Dto\System\UploadReq;
 
 class UploadServiceImpl implements UploadService
 {

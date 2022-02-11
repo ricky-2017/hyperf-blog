@@ -3,9 +3,9 @@
 namespace App\Controller\System;
 
 
-use app\system\dto\ElementApiReq;
-use app\system\dto\ElementReq;
-use app\system\dto\ElementSearchReq;
+use App\Dto\System\ElementApiReq;
+use App\Dto\System\ElementReq;
+use App\Dto\System\ElementSearchReq;
 use App\Service\System\ElementService;
 use App\Dto\PagingReq;
 use Hyperf\Utils\Context;
@@ -19,9 +19,9 @@ class ElementController extends AuthController
         $this->service = $service;
     }
 
-    public function lists(PagingReq $paging, ElementSearchReq $search)
+    public function lists()
     {
-        return jsonSuccess($this->service->lists($paging, $search));
+        return jsonSuccess($this->service->lists(PagingReq::fromRequest(), ElementSearchReq::fromRequest()));
     }
 
     public function listTree($depth = -1, $type = null)
@@ -40,19 +40,19 @@ class ElementController extends AuthController
         return jsonSuccess($this->service->get($this->request->query('id')));
     }
 
-    public function post(ElementReq $req, ElementApiReq $elementApiReq)
+    public function post()
     {
-        return jsonSuccess($this->service->post($req, $elementApiReq));
+        return jsonSuccess($this->service->post(ElementReq::fromRequest(), ElementApiReq::fromRequest()));
     }
 
-    public function patch(ElementReq $req, ElementApiReq $elementApiReq)
+    public function patch()
     {
-        $this->service->patch($this->request->query('id'), $req, $elementApiReq);
+        $this->service->patch($this->request->query('id'), ElementReq::fromRequest(), ElementApiReq::fromRequest());
     }
 
-    public function put(ElementReq $req, ElementApiReq $elementApiReq)
+    public function put()
     {
-        $this->service->put($this->request->query('id'), $req, $elementApiReq);
+        $this->service->put($this->request->query('id'), ElementReq::fromRequest(), ElementApiReq::fromRequest());
     }
 
     public function delete()
