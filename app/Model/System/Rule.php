@@ -35,25 +35,26 @@ class Rule extends Model
         RuleResource::where('resource_type', $resourceType)
             ->where('rule_id', $id)
             ->delete();
-        RuleResource::create(array_map(function ($v) use ($id, $resourceType, $ruleInfo) {
-            return [
+
+        array_map(function ($v) use ($id, $resourceType, $ruleInfo) {
+            RuleResource::create([
                 'rule_resource_group' => $ruleInfo['rule_group'],
                 'rule_id' => $id,
                 'resource_id' => $v,
                 'resource_type' => $resourceType,
-            ];
-        }, $resourceIds));
+            ]);
+        }, $resourceIds);
 
         Db::commit();
     }
 
     function getRuleResourcesAttribute($value)
     {
-        $list = RuleResource::with('resource')->where('rule_id', $this->rule_id)->select()->toArray();
+        $list = RuleResource::with('resource')->where('rule_id', $this->rule_id)->get();
 
         $ruleResources = array();
         if (!empty($list)) {
-            foreach ($list as $k => $v) {
+            foreach ($list->toArray() as $k => $v) {
                 if (!empty($v['resource'])) {
                     $ruleResources[$v['resource_type']][] = $v['resource'];
                 }

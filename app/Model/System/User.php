@@ -43,22 +43,23 @@ class User extends Model
         Db::beginTransaction();
         UserRole::where('user_id', $id)
             ->delete();
-        UserRole::create(array_map(function ($v) use ($id) {
-            return [
+
+        array_map(function ($v) use ($id) {
+            UserRole::create([
                 'user_id' => $id,
                 'role_id' => $v,
-            ];
-        }, $roleIds));
+            ]);
+        }, $roleIds);
 
         Db::commit();
     }
 
     public function getUserRolesAttribute($value)
     {
-        $rs = UserRole::with('role')->where('user_id', $this->user_id)->select();
+        $rs = UserRole::with('role')->where('user_id', $this->user_id)->get();
         $userRoles = array();
-        foreach ($rs as $k => $v) {
-            $userRoles[$k] = $v['role']->toArray();
+        foreach ($rs->toArray() as $k => $v) {
+            $userRoles[$k] = $v['role'];
         }
         return $userRoles;
     }

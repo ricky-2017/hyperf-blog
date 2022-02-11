@@ -2,7 +2,6 @@
 
 namespace App\Controller\System;
 
-use App\Controller\System\AuthController;
 use App\Dto\System\UserReq;
 use App\Service\System\UserService;
 use App\Dto\PagingReq;
@@ -34,33 +33,33 @@ class SysUser extends AuthController
         return jsonSuccess($this->service->get($user_id));
     }
 
-    public function post(UserReq $req)
+    public function post()
     {
-        return jsonSuccess($this->service->post($req));
+        return jsonSuccess($this->service->post(UserReq::fromRequest()));
     }
 
-    public function put(UserReq $req)
+    public function put()
     {
-        return jsonSuccess($this->service->put($this->request->query('id'), $req));
+        return jsonSuccess($this->service->put($this->request->input('id'), UserReq::fromRequest()));
     }
 
     public function delete()
     {
-        return jsonSuccess($this->service->delete($this->request->query('id')));
+        return jsonSuccess($this->service->delete($this->request->input('id')));
     }
 
     public function putStatus()
     {
-        return jsonSuccess($this->service->putStatus($this->request->query('id')));
+        return jsonSuccess($this->service->putStatus($this->request->input('id')));
     }
 
-    public function putPassword($password)
+    public function putPassword()
     {
-        return jsonSuccess($this->service->putPassword($this->request->query('id'), $password));
+        return jsonSuccess($this->service->putPassword($this->request->input('id'), $this->request->input('password')));
     }
 
-    public function putRoles($role_ids)
+    public function putRoles()
     {
-        return jsonSuccess($this->service->putRoles($this->request->query('id'), $role_ids));
+        return jsonSuccess($this->service->putRoles($this->request->input('id'), $this->request->input('role_ids')));
     }
 }

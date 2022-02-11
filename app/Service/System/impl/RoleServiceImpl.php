@@ -122,7 +122,7 @@ class RoleServiceImpl implements RoleService
         if ($findRs) {
             bizException(ReturnCode::DUPLICATE_DATA_NOT_ALLOW, "角色已存在");
         }
-        $this->role->find($id)->save($data);
+        $this->role->find($id)->update($data);
 
     }
 

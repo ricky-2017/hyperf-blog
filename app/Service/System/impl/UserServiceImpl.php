@@ -46,12 +46,13 @@ class UserServiceImpl implements UserService
         }
 
         $data = $this->user->where('user_id', '=', $id)->first();
+        $data->append(['user_roles']);
 
         if (empty($data)) {
             bizException(ReturnCode::REQUESTED_RESOURCE_NOT_FOUND);
         }
 
-        return $data->append(['user_roles']);
+        return $data;
     }
 
     function post(UserReq $req)
@@ -62,10 +63,14 @@ class UserServiceImpl implements UserService
         }
 
         $password = password_hash($req['user_password'], PASSWORD_BCRYPT);
-        $req['user_password'] = $password;
-        $req['user_status'] = 1;
 
-        $this->user->save($req->toArray());
+        User::create([
+            'user_password' => $password,
+            'user_name' => $req->getName(),
+            'user_nickname' => $req->getNickname(),
+            'user_phone' => $req->getPhone(),
+            'user_status' => 1
+        ]);
         return $this->user;
     }
 
@@ -133,8 +138,8 @@ class UserServiceImpl implements UserService
         if ($admin['user_name'] == config('service.SUPER_ADMIN')) {
             bizException(ReturnCode::INVALID_PARAM, '无权限修改超管帐号');
         }
-
-        $admin->save(['user_status' => !$admin['user_status']]);
+        $admin->user_status = !$admin['user_status'];
+        $admin->save();
     }
 
     function putPassword($id, $password)
