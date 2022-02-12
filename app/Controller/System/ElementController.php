@@ -57,17 +57,20 @@ class ElementController extends AbstractController
 
     public function patch()
     {
-        $this->service->patch($this->request->query('id'), ElementReq::fromRequest(), ElementApiReq::fromRequest());
+        $this->service->patch($this->request->input('id'), ElementReq::fromRequest(), ElementApiReq::fromRequest());
+        return jsonSuccess();
     }
 
     public function put()
     {
-        $this->service->put($this->request->query('id'), ElementReq::fromRequest(), ElementApiReq::fromRequest());
+        $this->service->put($this->request->input('id'), ElementReq::fromRequest(), ElementApiReq::fromRequest());
+        return jsonSuccess();
     }
 
     public function delete()
     {
-        $this->service->delete($this->request->query('id'));
+        $this->service->delete($this->request->input('id'));
+        return jsonSuccess();
     }
 
     public function getMyButtonsPrivilege()

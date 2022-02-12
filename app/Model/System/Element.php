@@ -14,6 +14,7 @@ class Element extends Model
 {
     protected $table = 'sys_element';
     protected $primaryKey = "ele_id";
+    protected $guarded = ['ele_id','ele_create_time'];
     const CREATED_AT = 'ele_create_time';
     const UPDATED_AT = 'ele_update_time';
 

@@ -136,32 +136,39 @@ class ElementServiceImpl implements ElementService
             bizException(ReturnCode::DUPLICATE_DATA_NOT_ALLOW, '元素已存在');
         }
 
-        Db::beginTransaction();
+        try {
+            Db::beginTransaction();
 
-        $this->element->save($req->toArray());
-        $elementId = $this->element->ele_id;
-        if (isset($apiEndpointsArr) && !empty($apiEndpointsArr)) {
-            $saveAll = [];
-            foreach ($apiEndpointsArr as $apiEndpoint) {
-                array_push($saveAll, [
-                    'ele_api_group' => $req->getEleGroup(),
-                    'sys_element_id' => $elementId,
-                    'api_endpoint' => $apiEndpoint
-                ]);
+            $element = Element::create($req->toArray());
+
+            $elementId = $element->ele_id;
+            if (isset($apiEndpointsArr) && !empty($apiEndpointsArr)) {
+                $saveAll = [];
+                foreach ($apiEndpointsArr as $apiEndpoint) {
+                    array_push($saveAll, [
+                        'ele_api_group' => $req->getEleGroup(),
+                        'sys_element_id' => $elementId,
+                        'api_endpoint' => $apiEndpoint
+                    ]);
+                }
             }
-        }
 
-        $this->elementApi->where('sys_element_id', $elementId)->delete();
-        if (isset($saveAll) && !empty($saveAll)) {
-            foreach ($saveAll as $vo) {
-                $this->elementApi->save($vo);
+            $this->elementApi->where('sys_element_id', $elementId)->delete();
+            if (isset($saveAll) && !empty($saveAll)) {
+                foreach ($saveAll as $vo) {
+//                    $this->elementApi->save($vo);
+                    ElementApi::create($vo);
+                }
             }
+
+            // 插入后重新排序
+            //$this->element->resort($this->element['ele_id'], $req->getParentId(), $req->getType(), $req->getSort());
+
+            Db::commit();
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED, $exception->getMessage());
         }
-
-        // 插入后重新排序
-        //$this->element->resort($this->element['ele_id'], $req->getParentId(), $req->getType(), $req->getSort());
-
-        Db::commit();
 
         return $this->element;
     }
@@ -198,19 +205,23 @@ class ElementServiceImpl implements ElementService
                 ]);
             }
         }
+        try {
+            Db::beginTransaction();
+            $element->update($req->toArray());
 
-        Db::beginTransaction();
-        $element->save($req->toArray());
-
-        if (isset($apiPoints)) {
-            $this->elementApi->where('sys_element_id', $id)->delete();
-            foreach ($apiPoints as $vo) {
-                $this->elementApi->save($vo);
+            if (isset($apiPoints)) {
+                $this->elementApi->where('sys_element_id', $id)->delete();
+                foreach ($apiPoints as $vo) {
+                    ElementApi::create($vo);
+                }
             }
-        }
 
-        Db::commit();
-        return true;
+            Db::commit();
+            return true;
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED, $exception->getMessage());
+        }
     }
 
     function put($id, ElementReq $req, ElementApiReq $elementApiReq)
@@ -246,62 +257,79 @@ class ElementServiceImpl implements ElementService
             }
         }
 
-        Db::beginTransaction();
-        $element->save($req->toArray());
+        try {
+            Db::beginTransaction();
+            $element->update($req->toArray());
 
-        $this->elementApi->where('sys_element_id', $id)->delete();
-        if (isset($apiPoints)) {
             $this->elementApi->where('sys_element_id', $id)->delete();
-            foreach ($apiPoints as $vo) {
-                $this->elementApi->save($vo);
+            if (isset($apiPoints)) {
+                $this->elementApi->where('sys_element_id', $id)->delete();
+                foreach ($apiPoints as $vo) {
+                    ElementApi::create($vo);
+                }
             }
-        }
 
-        Db::commit();
-        return true;
+            Db::commit();
+            return true;
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED, $exception->getMessage());
+        }
     }
 
     function sort($id, $sort)
     {
-        Db::beginTransaction();
+        try {
+            Db::beginTransaction();
+            $element = $this->element->find($id);
+            // 插入后重新排序
+            $this->element->resort($id, $element['ele_parent_id'], $element['ele_type'], $sort);
+            $this->element->update(['ele_sort' => $sort], ['ele_id' => $id]);
 
-        $element = $this->element->find($id);
-
-        // 插入后重新排序
-        $this->element->resort($id, $element['ele_parent_id'], $element['ele_type'], $sort);
-
-        $this->element->update(['ele_sort' => $sort], ['ele_id' => $id]);
-
-        Db::commit();
+            Db::commit();
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED, $exception->getMessage());
+        }
     }
 
     function delete($id)
     {
-        Db::beginTransaction();
-        $child = $this->element->where('ele_parent_id', $id)->first();
-        $element = $this->element->where('ele_id', $id)->first();
+        try {
+            Db::beginTransaction();
+            $child = $this->element->where('ele_parent_id', $id)->first();
+            $element = $this->element->where('ele_id', $id)->first();
 
-        if ($child) {
-            bizException(ReturnCode::DATA_CONSTRAINT_ERROR, "必须先删除子节点");
+            if ($child) {
+                bizException(ReturnCode::DATA_CONSTRAINT_ERROR, "必须先删除子节点");
+            }
+
+            $this->elementApi->where('sys_element_id', $id)->delete();
+
+            $this->element->where('ele_id', $id)->delete();
+            $this->ruleResource->where('resource_id', $id)->delete();
+
+            $this->element->resort($id, $element['ele_parent_id'], $element['ele_type'], $element['ele_sort'], -1);
+            Db::commit();
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED, $exception->getMessage());
         }
-
-        $this->elementApi->where('sys_element_id', $id)->delete();
-
-        $this->element->where('ele_id', $id)->delete();
-        $this->ruleResource->where('resource_id', $id)->delete();
-
-        $this->element->resort($id, $element['ele_parent_id'], $element['ele_type'], $element['ele_sort'], -1);
-        Db::commit();
     }
 
     function batchDelete(array $ids)
     {
-        Db::beginTransaction();
-        $this->element
-            ->whereIn('ele_id', $ids, 'or')
-            ->whereIn('ele_parent_id', $ids, 'or')
-            ->delete();
-        Db::commit();
+        try {
+            Db::beginTransaction();
+            $this->element
+                ->whereIn('ele_id', $ids, 'or')
+                ->whereIn('ele_parent_id', $ids, 'or')
+                ->delete();
+            Db::commit();
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED, $exception->getMessage());
+        }
     }
 
     function getMyButtonsPrivilege($sysUserId, $userGroup)

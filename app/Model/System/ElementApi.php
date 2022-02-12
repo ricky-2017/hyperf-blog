@@ -15,7 +15,7 @@ class ElementApi extends Model
 {
     protected $table = 'sys_element_api';
     protected $primaryKey = "api_id";
-
+    protected $guarded = ['sys_element_api'];
 //    public function resource()
 //    {
 //        return $this->morphOne(RuleResource::class, 'resource');
