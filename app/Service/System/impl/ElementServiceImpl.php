@@ -63,6 +63,7 @@ class ElementServiceImpl implements ElementService
     function listTree($depth = -1, $type = null, $group = '', $userId = null)
     {
         $trees = $this->element->listFirstLayer($type, $userId, $group);
+
         $list = $this->element->listExcludeFirstLayer($type, $userId, $group);
 
         $dictionary = array();

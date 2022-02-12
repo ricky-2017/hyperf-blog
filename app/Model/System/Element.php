@@ -22,6 +22,11 @@ class Element extends Model
         return $this->hasMany(ElementApi::class, 'sys_element_id', 'ele_id');
     }
 
+//    public function resource()
+//    {
+//        return $this->morphOne(RuleResource::class, 'resource');
+//    }
+
     /**
      * 对数的同一层级进行重排序
      * @param integer $id 改变了排序的元素id
@@ -63,23 +68,13 @@ class Element extends Model
             ->get()
             ->each(function ($item) {
                 if (!empty($item['api_points'])) {
-                    $pointsArr = array_column($item['api_points']->toArray(), 'api_endpoint');
+                    $pointsArr = array_column($item['api_points'], 'api_endpoint');
                     $item['api_endpoints'] = implode(',', $pointsArr);
                 }
                 return (array)$item;
             })->toArray();
 
-//        ->get()->each(function ($item, $key) {
-//        $item->tags = DB::table('article_tag_mapper', 't')->where('t.article_id', $item->id)
-//            ->join('tag', 't.tag_id', '=', 'tag.id')
-//            ->select('tag.id', 'tag.name')->get()->map(function ($value) {
-//                return (array)$value;
-//            });
-//        return (array)$item;
-//    })->toArray();
-
         return $data;
-
     }
 
     /**
@@ -109,7 +104,7 @@ class Element extends Model
             ->get()
             ->each(function ($item) {
                 if (!empty($item['api_points'])) {
-                    $pointsArr = array_column($item['api_points']->toArray(), 'api_endpoint');
+                    $pointsArr = array_column($item['api_points'], 'api_endpoint');
                     $item['api_endpoints'] = implode(',', $pointsArr);
                 }
                 return (array)$item;
@@ -128,8 +123,8 @@ class Element extends Model
         $ruleIds = RoleRule::where("role_id", "IN", $roleIds)->pluck('rule_id');
         $eleIds = RuleResource::where("rule_id", "IN", $ruleIds)
             ->where("resource_type", "ELEMENT")
-            ->pluck('resource_id')
-            ->toArray();
+            ->pluck('resource_id');
+
         // 获取父节点IDS fix(不全选某个权限,没有保存父级ID的问题)
         $parentEleIds = Element::where('ele_id', 'in', $eleIds)->where('ele_parent_id', 'neq', 0)->pluck('ele_parent_id');
         return (array_unique(array_merge($eleIds, $parentEleIds)));

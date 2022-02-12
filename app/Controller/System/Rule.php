@@ -2,14 +2,13 @@
 
 namespace App\Controller\System;
 
-use App\Controller\System\AuthController;
+use App\Controller\AbstractController;
 use App\Dto\System\RuleReq;
 use App\Service\System\RuleService;
 use App\Dto\PagingReq;
 
-class Rule extends AuthController
+class Rule extends AbstractController
 {
-
     private $service;
 
     public function __construct(RuleService $service)
@@ -25,7 +24,7 @@ class Rule extends AuthController
 
     public function get()
     {
-        $rule = $this->service->get($this->request->query('id'));
+        $rule = $this->service->get($this->request->input('id'));
         $rule['resources'] = $rule['rule_resources'];
         return jsonSuccess($rule);
     }
@@ -37,21 +36,21 @@ class Rule extends AuthController
 
     public function put()
     {
-        return jsonSuccess($this->service->put($this->request->query('id'), RuleReq::fromRequest()));
+        return jsonSuccess($this->service->put($this->request->input('id'), RuleReq::fromRequest()));
     }
 
     public function delete()
     {
-        return jsonSuccess($this->service->delete($this->request->query('id')));
+        return jsonSuccess($this->service->delete($this->request->input('id')));
     }
 
     public function putStatus()
     {
-        return jsonSuccess($this->service->putStatus($this->request->query('id')));
+        return jsonSuccess($this->service->putStatus($this->request->input('id')));
     }
 
-    public function putResources($resource_ids, $resource_type)
+    public function putResources()
     {
-        return jsonSuccess($this->service->putResources($this->request->query('id'), $resource_ids, $resource_type));
+        return jsonSuccess($this->service->putResources($this->request->input('id'), $this->request->input('resource_ids'), $this->request->input('resource_type')));
     }
 }

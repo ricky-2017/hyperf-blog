@@ -3,6 +3,7 @@
 namespace App\Controller\System;
 
 
+use App\Controller\AbstractController;
 use App\Dto\System\ElementApiReq;
 use App\Dto\System\ElementReq;
 use App\Dto\System\ElementSearchReq;
@@ -10,13 +11,14 @@ use App\Service\System\ElementService;
 use App\Dto\PagingReq;
 use Hyperf\Utils\Context;
 
-class ElementController extends AuthController
+class ElementController extends AbstractController
 {
     private $service;
 
     public function __construct(ElementService $service)
     {
         $this->service = $service;
+        parent::__construct();
     }
 
     public function lists()
@@ -24,15 +26,23 @@ class ElementController extends AuthController
         return jsonSuccess($this->service->lists(PagingReq::fromRequest(), ElementSearchReq::fromRequest()));
     }
 
-    public function listTree($depth = -1, $type = null)
+    public function listTree()
     {
-        $param = $this->request->all();
-        return jsonSuccess($this->service->listTree($depth, $type, $param['ele_group']));
+        return jsonSuccess($this->service->listTree(
+            $this->request->query('depth', -1),
+            $this->request->query('type', null),
+            $this->request->query('ele_group'))
+        );
     }
 
-    public function listMyTree($depth = -1, $types = null, $sys_user_id = null)
+    public function listMyTree()
     {
-        return jsonSuccess($this->service->listTree($depth, $types, Context::get('user_group'), $sys_user_id));
+        return jsonSuccess($this->service->listTree(
+            $this->request->query('depth', -1),
+            $this->request->query('type', null),
+            Context::get('user_group'),
+            $this->request->query('sys_user_id', null))
+        );
     }
 
     public function get()

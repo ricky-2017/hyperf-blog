@@ -36,25 +36,31 @@ class RuleServiceImpl implements RuleService
     function lists(PagingReq $paging, RuleReq $search)
     {
         $query = $this->rule->orderby('rule_name');
-//        $searchKeys = $search->keys();
-//        $searchValues = $search->toArray();
-//        if (!empty($search)) {
-//            $query->withSearch($searchKeys, $searchValues);
-//        }
 
-//        return $query->paginate($paging);
-        return $query->paginate();
+        if (!empty($search->getGroup())) {
+            $query->where('rule_group', $search->getGroup());
+        }
+
+        $data = $query->paginate();
+
+        return array(
+            'page' => $data->currentPage(),
+            'pageSize' => $data->perPage(),
+            'count' => $data->total(),
+            'data' => $data->items()
+        );
     }
 
     function get($id)
     {
         $data = $this->rule->find($id);
+        $data->append(['rule_resources']);
 
         if (empty($data)) {
             bizException(ReturnCode::REQUESTED_RESOURCE_NOT_FOUND);
         }
 
-        return $data->append(['rule_resources']);
+        return $data;
     }
 
     function post(RuleReq $req)
@@ -74,11 +80,17 @@ class RuleServiceImpl implements RuleService
         $findRs = $this->rule->where('rule_name', $data['rule_name'])
             ->where('rule_group', $data['rule_group'])
             ->first();
+
         if ($findRs) {
             bizException(ReturnCode::DUPLICATE_DATA_NOT_ALLOW, "权限集已存在");
         }
-        $this->rule->save($data);
-        return $this->rule;
+
+        return Rule::create([
+            'rule_group' => $req->getGroup(),
+            'rule_name' => $req->getName(),
+            'rule_status' => $req->getStatus()
+        ]);
+
     }
 
     function put($id, RuleReq $req)
@@ -100,7 +112,7 @@ class RuleServiceImpl implements RuleService
         if ($findRs) {
             bizException(ReturnCode::DUPLICATE_DATA_NOT_ALLOW, "权限集已存在");
         }
-        $this->rule->find($id)->save($data);
+        $this->rule->find($id)->update($data);
         return $this->rule;
     }
 
@@ -123,7 +135,7 @@ class RuleServiceImpl implements RuleService
         if ($findRs) {
             bizException(ReturnCode::DUPLICATE_DATA_NOT_ALLOW, "权限集已存在");
         }
-        $this->rule->find($id)->save($req->toArray(true));
+        $this->rule->find($id)->update($req->toArray(true));
         return $this->rule;
     }
 
@@ -135,7 +147,7 @@ class RuleServiceImpl implements RuleService
     function putStatus($id)
     {
         $rule = $this->rule->find($id);
-        $rule->save(['rule_status' => !$rule['rule_status']]);
+        $rule->update(['rule_status' => !$rule['rule_status']]);
         return $this->rule;
     }
 

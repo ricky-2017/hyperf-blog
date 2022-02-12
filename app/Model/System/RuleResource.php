@@ -19,8 +19,15 @@ class RuleResource extends Model
     const CREATED_AT = 'rule_resource_create_time';
     const UPDATED_AT = 'rule_resource_update_time';
 
-    public function resource()
-    {
-        return $this->morphTo('resource', ['ELEMENT' => 'Element', 'API' => 'Api']);
-    }
+//    public function resource()
+//    {
+//        return $this->morphTo('resource', ['ELEMENT' => 'Element', 'API' => 'Api']);
+//    }
+//
+//    public function resource()
+//    {
+//        return $this->morphTo();
+//    }
+
+
 }

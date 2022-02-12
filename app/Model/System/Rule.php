@@ -3,6 +3,7 @@
 namespace App\Model\System;
 
 
+use App\Constants\ReturnCode;
 use App\Model\Model;
 use Hyperf\DbConnection\Db;
 
@@ -27,36 +28,44 @@ class Rule extends Model
      */
     function replaceRuleResources($id, $resourceIds, $resourceType)
     {
-        $ruleInfo = Rule::where('rule_id', $id)->get();
+        $ruleInfo = Rule::where('rule_id', $id)->first();
         $parentIds = $this->getParentResourcesIds($resourceType, $resourceIds);
         $resourceIds = array_unique(array_merge($resourceIds, $parentIds));
         sort($resourceIds);
-        Db::beginTransaction();
-        RuleResource::where('resource_type', $resourceType)
-            ->where('rule_id', $id)
-            ->delete();
+        try {
+            Db::beginTransaction();
+            RuleResource::where('resource_type', $resourceType)
+                ->where('rule_id', $id)
+                ->delete();
 
-        array_map(function ($v) use ($id, $resourceType, $ruleInfo) {
-            RuleResource::create([
-                'rule_resource_group' => $ruleInfo['rule_group'],
-                'rule_id' => $id,
-                'resource_id' => $v,
-                'resource_type' => $resourceType,
-            ]);
-        }, $resourceIds);
+            array_map(function ($v) use ($id, $resourceType, $ruleInfo) {
+                RuleResource::create([
+                    'rule_resource_group' => $ruleInfo['rule_group'],
+                    'rule_id' => $id,
+                    'resource_id' => $v,
+                    'resource_type' => $resourceType,
+                ]);
+            }, $resourceIds);
 
-        Db::commit();
+            Db::commit();
+        } catch (\Exception $exception) {
+            Db::rollBack();
+            bizException(ReturnCode::UNDEFINED);
+        }
     }
 
     function getRuleResourcesAttribute($value)
     {
-        $list = RuleResource::with('resource')->where('rule_id', $this->rule_id)->get();
+        $list = RuleResource::where('rule_id', $this->rule_id)->get();
 
         $ruleResources = array();
+
         if (!empty($list)) {
             foreach ($list->toArray() as $k => $v) {
-                if (!empty($v['resource'])) {
-                    $ruleResources[$v['resource_type']][] = $v['resource'];
+                if ($v['resource_type'] == 'ELEMENT') {
+                    $ruleResources[$v['resource_type']][] = Element::where('ele_id', $v['resource_id'])->first();
+                } elseif ($v['resource_type'] == 'ELEMENTAPI') {
+                    $ruleResources[$v['resource_type']][] = ElementApi::where('api_id', $v['resource_id'])->first();
                 }
             }
         }
@@ -76,6 +85,8 @@ class Rule extends Model
         if ($resourceType == 'ELEMENT') {
             $parentIds = Element::where('ele_id', 'in', $resourceIds)
                 ->pluck('ele_parent_id');
+            if (!empty($parentIds))
+                $parentIds = $parentIds->toArray();
         } elseif ($resourceType == 'API') {
 //            $parentIds = Api::where('api_id', 'in', $resourceIds)
 //                ->pluck('api_parent_id');
